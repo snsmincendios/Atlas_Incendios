@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Incendios Sierra Nevada de Santa Marta</title>
+
+    <!-- Leaflet css -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        #map {
+            width: 100%;
+            height: 100vh;
+        }
+        .titulomapa{
+        margin: 0; /* Elimina el margen externo */
+        padding: 5px; /* Ajusta el relleno interno si es necesario */
+        font-size: 12px; /* Ajusta el tamaño de fuente si es necesario */
+        line-height: 0.2; /* Controla la altura de la línea */
+        text-align: center;
+        background-color: rgb(251, 245, 236);
+
+        }
+    </style>
+</head>
+<body>
+    <div class="titulomapa">
+        <h1>Pérdida de cobertura arbórea por causa de Incendios en la Sierra Nevada de Santa Marta 2001 - 2023</h1>
+    </div>
+
+
+    <div id="map"></div>
+    <div id="timeline"></div>
+
+</body>
+
+    <!-- Leaflet js -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <!-- GeoJSON data script -->
+    <script src="./Data/LineaNegraDecreto1500.js"></script>
+    <script src="./Data/SitiosSagradosLineaNegra1500.js"></script>
+    <script src="./Data/Cuencas_SNSM.js"></script>
+    <script src="./Data/RiosGrandesSNSM.js"></script>
+    <script src="./Data/2001_IncendiosBosques2.js"></script>
+    <script src="./Data/2002_IncendiosBosques2.js"></script>
+    <script src="./Data/2003_IncendiosBosques2.js"></script>
+    <script src="./Data/2004_IncendiosBosques2.js"></script>
+    <script src="./Data/2005_IncendiosBosques2.js"></script>
+    <script src="./Data/2006_IncendiosBosques2.js"></script>
+    <script src="./Data/2007_IncendiosBosques2.js"></script>
+    <script src="./Data/2008_IncendiosBosques2.js"></script>
+    <script src="./Data/2009_IncendiosBosques2.js"></script>
+    <script src="./Data/2010_IncendiosBosques2.js"></script>
+    <script src="./Data/2011_IncendiosBosques2.js"></script>
+    <script src="./Data/2012_IncendiosBosques2.js"></script>
+    <script src="./Data/2013_IncendiosBosques2.js"></script>
+    <script src="./Data/2014_IncendiosBosques2.js"></script>
+    <script src="./Data/2015_IncendiosBosques.js"></script>
+    <script src="./Data/2016_IncendiosBosques.js"></script>
+    <script src="./Data/2017_IncendiosBosques.js"></script>
+    <script src="./Data/2018_IncendiosBosques.js"></script>
+    <script src="./Data/2019_IncendiosBosques2.js"></script>
+    <script src="./Data/2020_IncendiosBosques.js"></script>
+    <script src="./Data/2021_IncendiosBosques3.js"></script>
+    <script src="./Data/2021_IncendiosBosques.js"></script>
+    <script src="./Data/2022_IncendiosBosques.js"></script>
+    <script src="./Data/2023_IncendiosBosques2.js"></script>
+    <script src="./Data/Incendios_2001_2023_FINAL.js"></script>
+    <script src="./Data/ResguardoKMA.js"></script>
+    <script src="./Data/ResguardoArhuaco.js"></script>
+    <script src="./Data/ResguardoKankuamo.js"></script>
+    <script src="./Data/ParquesNacionales2.js"></script>
+    <script src="./Data/SantaMarta.js"></script>
+    <script src="./Data/Cienaga.js"></script>
+    <script src="./Data/Riohacha.js"></script>
+    <script src="./Data/Valledupar.js"></script>
+    <script src="./Data/Colombia.js"></script>
+
+
+    
+    
+    
+    <!-- Custom script -->
+    <script>
+        // Initialize map
+        var map = L.map('map').setView([10.69488823927001, -73.63702514435187], 8.5);
+
+        // Base map layer
+        var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+        }).addTo(map);
+
+        // Add GeoJSON layer
+
+        // Linea Negra Decreto 1500
+        var LineaNegra = L.geoJSON(LineaNegra, {
+            style: function(feature) {
+                return {
+                    color: 'black', // Border color
+                    weight: 3,          // Border thickness
+                };
+            }
+        }).addTo(map);
+
+        // Sitios Sagrados Decreto 1500
+        // Definir el ícono
+        var SitiosSagrados_ICON = L.icon({
+        iconUrl: '/Simbolos/SitiosSagradosIcon.png',
+        iconSize: [7, 7], // Tamaño del ícono
+        });
+
+        // Crear capa GeoJSON con íconos
+        var SitiosSagrados1500 = L.geoJSON(SitiosSagrados1500, {
+        pointToLayer: function (feature, latlng) {
+        // Verifica si el objeto feature tiene coordenadas para el marcador
+        if (feature.geometry && feature.geometry.type === 'Point') {
+            return L.marker(latlng, { icon: SitiosSagrados_ICON });
+        }
+        // Si no es un punto, no se agrega al mapa
+        return null;
+        },
+        onEachFeature: function(feature, layer) {
+        if (feature.properties && feature.properties.Nombre && feature.properties.NumDec && feature.properties.Descripcio) {
+            var popupContent = '<strong>Nombre:</strong> ' + feature.properties.Nombre + '<br><strong>Número Decreto:</strong> ' + feature.properties.NumDec + '<br><strong>Descripción:</strong> ' + feature.properties.Descripcio;
+            layer.bindPopup(popupContent);
+        }}});
+
+
+        //////////////////////////////////
+        //////////////////////////////////
+        // CIUDADES 
+        //////////////////////////////////
+        //////////////////////////////////
+
+       //  Santa Marta 
+       var SantaMarta = L.geoJSON(SantaMarta, {
+    style: function(feature) {
+        return {
+            fillColor: '#CED5DB',
+            color: 'white',       // Color del borde
+            weight: 1.5,          // Grosor del borde
+            opacity: 0.5,         // Opacidad del borde
+            fillOpacity: 0.5      // Opacidad de relleno
+        };
+    },
+    onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.NOM_CPOB) {
+            // Añadir tooltip con el nombre de la entidad
+            layer.bindTooltip(feature.properties.NOM_CPOB, {
+                permanent: true,      // Tooltip siempre visible
+                direction: 'center',  // Centrar el texto sobre la entidad
+                className: 'cienaga-label'  // Clase CSS para estilo personalizado
+            }).openTooltip();  // Abrir el tooltip automáticamente
+        }}}).addTo(map);
+
+    // Añadir estilo CSS para el tooltip
+    var css = `
+    .cienaga-label {
+        font-size: 10px;      /* Tamaño de la letra */
+        color: white;         /* Color de la letra */
+        background: none;     /* Sin fondo para el tooltip */
+        border: none;         /* Sin borde para el tooltip */
+        text-shadow: 1px 1px 2px black; /* Sombra para mejorar la legibilidad */
+    }
+    `;
+    var style = document.createElement('style');
+    style.appendChild(document.createTextNode(css));
+    document.head.appendChild(style);
+
+
+
+
+       //  Cienaga 
+
+        var Cienaga = L.geoJSON(Cienaga, {
+    style: function(feature) {
+        return {
+            fillColor: '#CED5DB',
+            color: 'white',       // Color del borde
+            weight: 1.5,          // Grosor del borde
+            opacity: 0.5,         // Opacidad del borde
+            fillOpacity: 0.5      // Opacidad de relleno
+        };
+    },
+    onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.NOM_CPOB) {
+            // Añadir tooltip con el nombre de la entidad
+            layer.bindTooltip(feature.properties.NOM_CPOB, {
+                permanent: true,      // Tooltip siempre visible
+                direction: 'center',  // Centrar el texto sobre la entidad
+                className: 'cienaga-label'  // Clase CSS para estilo personalizado
+            }).openTooltip();  // Abrir el tooltip automáticamente
+        }}}).addTo(map);
+
+    // Añadir estilo CSS para el tooltip
+    var css = `
+    .cienaga-label {
+        font-size: 10px;      /* Tamaño de la letra */
+        color: white;         /* Color de la letra */
+        background: none;     /* Sin fondo para el tooltip */
+        border: none;         /* Sin borde para el tooltip */
+        text-shadow: 1px 1px 2px black; /* Sombra para mejorar la legibilidad */
+    }
+    `;
+    var style = document.createElement('style');
+    style.appendChild(document.createTextNode(css));
+    document.head.appendChild(style);
+
+
+       //  Riohacha 
+       var Riohacha = L.geoJSON(Riohacha, {
+    style: function(feature) {
+        return {
+            fillColor: '#CED5DB',
+            color: 'white',       // Color del borde
+            weight: 1.5,          // Grosor del borde
+            opacity: 0.5,         // Opacidad del borde
+            fillOpacity: 0.5      // Opacidad de relleno
+        };
+    },
+    onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.NOM_CPOB) {
+            // Añadir tooltip con el nombre de la entidad
+            layer.bindTooltip(feature.properties.NOM_CPOB, {
+                permanent: true,      // Tooltip siempre visible
+                direction: 'center',  // Centrar el texto sobre la entidad
+                className: 'cienaga-label'  // Clase CSS para estilo personalizado
+            }).openTooltip();  // Abrir el tooltip automáticamente
+        }}}).addTo(map);
+
+    // Añadir estilo CSS para el tooltip
+    var css = `
+    .cienaga-label {
+        font-size: 10px;      /* Tamaño de la letra */
+        color: white;         /* Color de la letra */
+        background: none;     /* Sin fondo para el tooltip */
+        border: none;         /* Sin borde para el tooltip */
+        text-shadow: 1px 1px 2px black; /* Sombra para mejorar la legibilidad */
+    }
+    `;
+    var style = document.createElement('style');
+    style.appendChild(document.createTextNode(css));
+    document.head.appendChild(style);
+
+
+
+       //  Valledupar 
+       var Valledupar = L.geoJSON(Valledupar, {
+    style: function(feature) {
+        return {
+            fillColor: '#CED5DB',
+            color: 'white',       // Color del borde
+            weight: 1.5,          // Grosor del borde
+            opacity: 0.5,         // Opacidad del borde
+            fillOpacity: 0.5      // Opacidad de relleno
+        };
+    },
+    onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.NOM_CPOB) {
+            // Añadir tooltip con el nombre de la entidad
+            layer.bindTooltip(feature.properties.NOM_CPOB, {
+                permanent: true,      // Tooltip siempre visible
+                direction: 'center',  // Centrar el texto sobre la entidad
+                className: 'cienaga-label'  // Clase CSS para estilo personalizado
+            }).openTooltip();  // Abrir el tooltip automáticamente
+        }}}).addTo(map);
+
+    // Añadir estilo CSS para el tooltip
+    var css = `
+    .cienaga-label {
+        font-size: 10px;      /* Tamaño de la letra */
+        color: white;         /* Color de la letra */
+        background: none;     /* Sin fondo para el tooltip */
+        border: none;         /* Sin borde para el tooltip */
+        text-shadow: 1px 1px 2px black; /* Sombra para mejorar la legibilidad */
+    }
+    `;
+    var style = document.createElement('style');
+    style.appendChild(document.createTextNode(css));
+    document.head.appendChild(style);
+
+
+
+
+
+        // Cuencas SNSM
+        var Cuencas_SNSM = L.geoJSON(Cuencas_SNSM, {
+        style: function(feature) {
+        return {
+            fillColor: 'white',
+            color: '#f9b950',     // Border color
+            weight: 1,          // Border thickness
+            opacity: 0.5,        // Border opacity (should be between 0 and 1)
+            fillOpacity: 0.1,    // Fill opacity
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Nombre) {
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>' + feature.properties.Nombre + '</strong>');
+        }}});
+
+
+        // Rios Grandes SNSM
+
+        L.geoJSON(RiosGrandesSNSM, {
+        style: function(feature) {
+        return {
+            color: 'blue',     // Border color
+            weight: 1.5,          // Border thickness
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.NOMBRE_GEO) {
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>' + feature.properties.NOMBRE_GEO + '</strong>');
+        }}}).addTo(map);
+
+
+       //  Resguardo KMA
+       var ResguardoKMA = L.geoJSON(ResguardoKMA, {
+        style: function(feature) {
+        return {
+            fillColor: '#AB274F',
+            color: '#AB274F',     // Border color
+            weight: 1.5,          // Border thickness
+            opacity: 0.5,        // Border opacity (should be between 0 and 1)
+            fillOpacity: 0.3,    // Fill opacity
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.NOMBRE) {
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>' + feature.properties.NOMBRE + '</strong>');
+        }}});
+
+
+
+       //  Resguardo Arhuaco
+       var ResguardoArhuaco = L.geoJSON(ResguardoArhuaco, {
+        style: function(feature) {
+        return {
+            fillColor: '#EFDECD',
+            color: '#EFDECD',     // Border color
+            weight: 1.5,          // Border thickness
+            opacity: 0.5,        // Border opacity (should be between 0 and 1)
+            fillOpacity: 0.3,    // Fill opacity
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.NOMBRE) {
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>' + feature.properties.NOMBRE + '</strong>');
+        }}});
+
+
+       //  Resguardo Kankuamo
+       var ResguardoKankuamo = L.geoJSON(ResguardoKankuamo, {
+        style: function(feature) {
+        return {
+            fillColor: '#FFD500',
+            color: '#FFD500',     // Border color
+            weight: 1.5,          // Border thickness
+            opacity: 0.5,        // Border opacity (should be between 0 and 1)
+            fillOpacity: 0.3,    // Fill opacity
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.NOMBRE) {
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>' + feature.properties.NOMBRE + '</strong>');
+        }}});
+
+
+
+       //  Parques Nacionales 
+       var ParquesNacionalesNaturales = L.geoJSON(ParquesNacionalesNaturales, {
+        style: function(feature) {
+        return {
+            fillColor: '#00CC00',
+            color: '#00CC00',     // Border color
+            weight: 1.5,          // Border thickness
+            opacity: 0.5,        // Border opacity (should be between 0 and 1)
+            fillOpacity: 0.2,    // Fill opacity
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Nombre) {
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>' + feature.properties.Nombre + '</strong>');
+        }}});
+
+
+
+        
+
+        //////////////////////////////////
+        //////////////////////////////////
+        // BOSQUES QUEMADOS POR INCENDIOS 
+        //////////////////////////////////
+        //////////////////////////////////
+        
+        
+        // 2001 //////////////////////////////////
+        var IncendiosBosques_2001 = L.geoJSON(IncendiosBosques_2001, {
+        style: function(feature) {
+        return {
+            color: 'red',     // Color del borde
+            weight: 1.5,      // Grosor del borde
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Year && feature.properties.Hectareas 
+        && feature.properties.name_1 && feature.properties.name_2 && feature.properties.NOMBRE 
+        && feature.properties.Nombre_1 && feature.properties.Nombre_12) {
+            // Redondear las hectáreas a dos decimales
+            var hectareas = feature.properties.Hectareas.toFixed(3);
+            
+            // Usar HTML para resaltar el nombre
+            layer.bindPopup('<strong>Hectáreas de Bosque perdidas por Incendios:</strong><br>' +
+                '<strong>Año:</strong> ' + feature.properties.Year + '<br><strong>Hectáreas:</strong> ' + 
+                hectareas + '<br><strong>Departamento:</strong> ' + feature.properties.name_1 + 
+                '<br><strong>Municipio:</strong> ' + feature.properties.name_2 + '<br><strong>Resguardo Indígena:</strong> ' 
+                + feature.properties.NOMBRE + '<br><strong>Parque Nacional Natural:</strong> ' + feature.properties.Nombre_1
+                + '<br><strong>Cuenca:</strong> ' + feature.properties.Nombre_12);
+        }}});
+
+        
+
+        // 2002 //////////////////////////////////
+        var IncendiosBosques_2002 = L.geoJSON(IncendiosBosques_2002, {
+        style: function(feature) {
+        return {
+            color: 'red',     // Color del borde
+            weight: 1.5,      // Grosor del borde
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Year && feature.properties.Hectareas 
+            && feature.properties.name_1 && feature.properties.name_2 && feature.properties.NOMBRE 
+            && feature.properties.Nombre_1 && feature.properties.Nombre_12) {
+            
+            // Redondear las hectáreas a tres decimales
+            var hectareas = feature.properties.Hectareas.toFixed(3);
+
+            // Usar HTML para resaltar el nombre
+            layer.bindPopup('<strong>Hectáreas de Bosque perdidas por Incendios:</strong><br>' +
+                '<strong>Año:</strong> ' + feature.properties.Year + '<br><strong>Hectáreas:</strong> ' + 
+                hectareas + '<br><strong>Departamento:</strong> ' + feature.properties.name_1 + 
+                '<br><strong>Municipio:</strong> ' + feature.properties.name_2 + '<br><strong>Resguardo Indígena:</strong> ' 
+                + feature.properties.NOMBRE + '<br><strong>Parque Nacional Natural:</strong> ' + feature.properties.Nombre_1
+                + '<br><strong>Cuenca:</strong> ' + feature.properties.Nombre_12);
+        }}});
+
+
+        // 2003 //////////////////////////////////
+        var IncendiosBosques_2003 = L.geoJSON(IncendiosBosques_2003, {
+        style: function(feature) {
+        return {
+            color: 'red',     // Border color
+            weight: 1.5,          // Border thickness
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Year && feature.properties.Hectareas && feature.properties.name_1 && feature.properties.name_2 && feature.properties.NOMBRE && feature.properties.Nombre_1 && feature.properties.Nombre_12) {
+            // Redondear las hectáreas a tres decimales
+            var hectareas = feature.properties.Hectareas.toFixed(3);
+            
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>Hectáreas de Bosque perdidas por Incendios:</strong><br>' +
+            '<strong>Año:</strong> ' + feature.properties.Year + '<br><strong>Hectareas:</strong> ' + 
+            hectareas + '<br><strong>Departamento:</strong> ' + feature.properties.name_1 + 
+            '<br><strong>Municipio:</strong> ' + feature.properties.name_2 + '<br><strong>Resguardo Indigena:</strong> ' 
+            + feature.properties.NOMBRE + '<br><strong>Parque Nacional Natural:</strong> ' + feature.properties.Nombre_1
+            + '<br><strong>Cuenca:</strong> ' + feature.properties.Nombre_12);
+        }}});
+
+
+        // 2004 //////////////////////////////////
+        var IncendiosBosques_2004 = L.geoJSON(IncendiosBosques_2004, {
+        style: function(feature) {
+        return {
+            color: 'red',     // Border color
+            weight: 1.5,          // Border thickness
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Year && feature.properties.Hectareas && feature.properties.name_1 && feature.properties.name_2 && feature.properties.NOMBRE && feature.properties.Nombre_1 && feature.properties.Nombre_12) {
+            // Redondear las hectáreas a tres decimales
+            var hectareas = feature.properties.Hectareas.toFixed(3);
+
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>Hectáreas de Bosque perdidas por Incendios:</strong><br>' +
+                '<strong>Año:</strong> ' + feature.properties.Year + '<br><strong>Hectareas:</strong> ' + 
+                hectareas + '<br><strong>Departamento:</strong> ' + feature.properties.name_1 + 
+            '<br><strong>Municipio:</strong> ' + feature.properties.name_2 + '<br><strong>Resguardo Indigena:</strong> ' 
+            + feature.properties.NOMBRE + '<br><strong>Parque Nacional Natural:</strong> ' + feature.properties.Nombre_1
+            + '<br><strong>Cuenca:</strong> ' + feature.properties.Nombre_12);
+        }}});
+
+
+        // 2005 //////////////////////////////////
+        var IncendiosBosques_2005 = L.geoJSON(IncendiosBosques_2005, {
+        style: function(feature) {
+        return {
+            color: 'red',     // Border color
+            weight: 1.5,          // Border thickness
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Year && feature.properties.Hectareas && feature.properties.name_1 && feature.properties.name_2 && feature.properties.NOMBRE && feature.properties.Nombre_1 && feature.properties.Nombre_12) {
+            // Redondear las hectáreas a tres decimales
+            var hectareas = feature.properties.Hectareas.toFixed(3);
+
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>Hectáreas de Bosque perdidas por Incendios:</strong><br>' +
+                '<strong>Año:</strong> ' + feature.properties.Year + '<br><strong>Hectareas:</strong> ' + 
+            hectareas + '<br><strong>Departamento:</strong> ' + feature.properties.name_1 + 
+            '<br><strong>Municipio:</strong> ' + feature.properties.name_2 + '<br><strong>Resguardo Indigena:</strong> ' 
+            + feature.properties.NOMBRE + '<br><strong>Parque Nacional Natural:</strong> ' + feature.properties.Nombre_1
+            + '<br><strong>Cuenca:</strong> ' + feature.properties.Nombre_12);
+        }}});
+
+
+        // 2006 //////////////////////////////////
+        var IncendiosBosques_2006 = L.geoJSON(IncendiosBosques_2006, {
+        style: function(feature) {
+        return {
+            color: 'red',     // Border color
+            weight: 1.5,          // Border thickness
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Year && feature.properties.Hectareas && feature.properties.name_1 && feature.properties.name_2 && feature.properties.NOMBRE && feature.properties.Nombre_1 && feature.properties.Nombre_12) {
+            // Redondear las hectáreas a tres decimales
+            var hectareas = feature.properties.Hectareas.toFixed(3);
+            
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>Hectáreas de Bosque perdidas por Incendios:</strong><br>' +
+                '<strong>Año:</strong> ' + feature.properties.Year + '<br><strong>Hectareas:</strong> ' + 
+            hectareas + '<br><strong>Departamento:</strong> ' + feature.properties.name_1 + 
+            '<br><strong>Municipio:</strong> ' + feature.properties.name_2 + '<br><strong>Resguardo Indigena:</strong> ' 
+            + feature.properties.NOMBRE + '<br><strong>Parque Nacional Natural:</strong> ' + feature.properties.Nombre_1
+            + '<br><strong>Cuenca:</strong> ' + feature.properties.Nombre_12);
+        }}});
+
+
+        // 2007 //////////////////////////////////
+        var IncendiosBosques_2007 = L.geoJSON(IncendiosBosques_2007, {
+        style: function(feature) {
+        return {
+            color: 'red',     // Border color
+            weight: 1.5,          // Border thickness
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Year && feature.properties.Hectareas && feature.properties.name_1 && feature.properties.name_2 && feature.properties.NOMBRE && feature.properties.Nombre_1 && feature.properties.Nombre_12) {
+            // Redondear las hectáreas a tres decimales
+            var hectareas = feature.properties.Hectareas.toFixed(3);
+            
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>Hectáreas de Bosque perdidas por Incendios:</strong><br>' +
+                '<strong>Año:</strong> ' + feature.properties.Year + '<br><strong>Hectareas:</strong> ' + 
+            hectareas + '<br><strong>Departamento:</strong> ' + feature.properties.name_1 + 
+            '<br><strong>Municipio:</strong> ' + feature.properties.name_2 + '<br><strong>Resguardo Indigena:</strong> ' 
+            + feature.properties.NOMBRE + '<br><strong>Parque Nacional Natural:</strong> ' + feature.properties.Nombre_1
+            + '<br><strong>Cuenca:</strong> ' + feature.properties.Nombre_12);
+        }}});
+
+
+        // 2008 //////////////////////////////////
+        var IncendiosBosques_2008 = L.geoJSON(IncendiosBosques_2008, {
+        style: function(feature) {
+        return {
+            color: 'red',     // Border color
+            weight: 1.5,          // Border thickness
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Year && feature.properties.Hectareas && feature.properties.name_1 && feature.properties.name_2 && feature.properties.NOMBRE && feature.properties.Nombre_1 && feature.properties.Nombre_12) {
+            // Redondear las hectáreas a tres decimales
+            var hectareas = feature.properties.Hectareas.toFixed(3);
+            
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>Hectáreas de Bosque perdidas por Incendios:</strong><br>' +
+                '<strong>Año:</strong> ' + feature.properties.Year + '<br><strong>Hectareas:</strong> ' + 
+            hectareas + '<br><strong>Departamento:</strong> ' + feature.properties.name_1 + 
+            '<br><strong>Municipio:</strong> ' + feature.properties.name_2 + '<br><strong>Resguardo Indigena:</strong> ' 
+            + feature.properties.NOMBRE + '<br><strong>Parque Nacional Natural:</strong> ' + feature.properties.Nombre_1
+            + '<br><strong>Cuenca:</strong> ' + feature.properties.Nombre_12);
+        }}});
+
+
+        // 2009 //////////////////////////////////
+        var IncendiosBosques_2009 = L.geoJSON(IncendiosBosques_2009, {
+        style: function(feature) {
+        return {
+            color: 'red',     // Border color
+            weight: 1.5,          // Border thickness
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Year && feature.properties.Hectareas && feature.properties.name_1 && feature.properties.name_2 && feature.properties.NOMBRE && feature.properties.Nombre_1 && feature.properties.Nombre_12) {
+            // Redondear las hectáreas a tres decimales
+            var hectareas = feature.properties.Hectareas.toFixed(3);
+            
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>Hectáreas de Bosque perdidas por Incendios:</strong><br>' +
+                '<strong>Año:</strong> ' + feature.properties.Year + '<br><strong>Hectareas:</strong> ' + 
+            hectareas + '<br><strong>Departamento:</strong> ' + feature.properties.name_1 + 
+            '<br><strong>Municipio:</strong> ' + feature.properties.name_2 + '<br><strong>Resguardo Indigena:</strong> ' 
+            + feature.properties.NOMBRE + '<br><strong>Parque Nacional Natural:</strong> ' + feature.properties.Nombre_1
+            + '<br><strong>Cuenca:</strong> ' + feature.properties.Nombre_12);
+        }}});
+
+
+        // 2010 //////////////////////////////////
+        var IncendiosBosques_2010 = L.geoJSON(IncendiosBosques_2010, {
+        style: function(feature) {
+        return {
+            color: 'red',     // Border color
+            weight: 1.5,          // Border thickness
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Year && feature.properties.Hectareas && feature.properties.name_1 && feature.properties.name_2 && feature.properties.NOMBRE && feature.properties.Nombre_1 && feature.properties.Nombre_12) {
+            // Redondear las hectáreas a tres decimales
+            var hectareas = feature.properties.Hectareas.toFixed(3);
+            
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>Hectáreas de Bosque perdidas por Incendios:</strong><br>' +
+            '<strong>Año:</strong> ' + feature.properties.Year + '<br><strong>Hectareas:</strong> ' + 
+            hectareas + '<br><strong>Departamento:</strong> ' + feature.properties.name_1 + 
+            '<br><strong>Municipio:</strong> ' + feature.properties.name_2 + '<br><strong>Resguardo Indigena:</strong> ' 
+            + feature.properties.NOMBRE + '<br><strong>Parque Nacional Natural:</strong> ' + feature.properties.Nombre_1
+            + '<br><strong>Cuenca:</strong> ' + feature.properties.Nombre_12);
+        }}});
+
+
+        // 2011 //////////////////////////////////
+        var IncendiosBosques_2011 = L.geoJSON(IncendiosBosques_2011, {
+        style: function(feature) {
+        return {
+            color: 'red',     // Border color
+            weight: 1.5,          // Border thickness
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Year && feature.properties.Hectareas && feature.properties.name_1 && feature.properties.name_2 && feature.properties.NOMBRE && feature.properties.Nombre_1 && feature.properties.Nombre_12) {
+            // Redondear las hectáreas a tres decimales
+            var hectareas = feature.properties.Hectareas.toFixed(3);
+            
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>Hectáreas de Bosque perdidas por Incendios:</strong><br>' +
+            '<strong>Año:</strong> ' + feature.properties.Year + '<br><strong>Hectareas:</strong> ' + 
+            hectareas + '<br><strong>Departamento:</strong> ' + feature.properties.name_1 + 
+            '<br><strong>Municipio:</strong> ' + feature.properties.name_2 + '<br><strong>Resguardo Indigena:</strong> ' 
+            + feature.properties.NOMBRE + '<br><strong>Parque Nacional Natural:</strong> ' + feature.properties.Nombre_1
+            + '<br><strong>Cuenca:</strong> ' + feature.properties.Nombre_12);
+        }}});
+
+
+        // 2012 //////////////////////////////////
+        var IncendiosBosques_2012 = L.geoJSON(IncendiosBosques_2012, {
+        style: function(feature) {
+        return {
+            color: 'red',     // Border color
+            weight: 1.5,          // Border thickness
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Year && feature.properties.Hectareas && feature.properties.name_1 && feature.properties.name_2 && feature.properties.NOMBRE && feature.properties.Nombre_1 && feature.properties.Nombre_12) {
+            // Redondear las hectáreas a tres decimales
+            var hectareas = feature.properties.Hectareas.toFixed(3);
+            
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>Hectáreas de Bosque perdidas por Incendios:</strong><br>' +
+            '<strong>Año:</strong> ' + feature.properties.Year + '<br><strong>Hectareas:</strong> ' + 
+            hectareas + '<br><strong>Departamento:</strong> ' + feature.properties.name_1 + 
+            '<br><strong>Municipio:</strong> ' + feature.properties.name_2 + '<br><strong>Resguardo Indigena:</strong> ' 
+            + feature.properties.NOMBRE + '<br><strong>Parque Nacional Natural:</strong> ' + feature.properties.Nombre_1
+            + '<br><strong>Cuenca:</strong> ' + feature.properties.Nombre_12);
+        }}});
+
+
+        // 2013 //////////////////////////////////
+        var IncendiosBosques_2013 = L.geoJSON(IncendiosBosques_2013, {
+        style: function(feature) {
+        return {
+            color: 'red',     // Border color
+            weight: 1.5,          // Border thickness
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Year && feature.properties.Hectareas && feature.properties.name_1 && feature.properties.name_2 && feature.properties.NOMBRE && feature.properties.Nombre_1 && feature.properties.Nombre_12) {
+            // Redondear las hectáreas a tres decimales
+            var hectareas = feature.properties.Hectareas.toFixed(3);
+            
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>Hectáreas de Bosque perdidas por Incendios:</strong><br>' +
+            '<strong>Año:</strong> ' + feature.properties.Year + '<br><strong>Hectareas:</strong> ' + 
+            hectareas + '<br><strong>Departamento:</strong> ' + feature.properties.name_1 + 
+            '<br><strong>Municipio:</strong> ' + feature.properties.name_2 + '<br><strong>Resguardo Indigena:</strong> ' 
+            + feature.properties.NOMBRE + '<br><strong>Parque Nacional Natural:</strong> ' + feature.properties.Nombre_1
+            + '<br><strong>Cuenca:</strong> ' + feature.properties.Nombre_12);
+        }}});
+
+
+        // 2014 //////////////////////////////////
+        var IncendiosBosques_2014 = L.geoJSON(IncendiosBosques_2014, {
+        style: function(feature) {
+        return {
+            color: 'red',     // Border color
+            weight: 1.5,          // Border thickness
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Year && feature.properties.Hectareas && feature.properties.name_1 && feature.properties.name_2 && feature.properties.NOMBRE && feature.properties.Nombre_1 && feature.properties.Nombre_12) {
+            // Redondear las hectáreas a tres decimales
+            var hectareas = feature.properties.Hectareas.toFixed(3);
+            
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>Hectáreas de Bosque perdidas por Incendios:</strong><br>' +
+            '<strong>Año:</strong> ' + feature.properties.Year + '<br><strong>Hectareas:</strong> ' + 
+            hectareas + '<br><strong>Departamento:</strong> ' + feature.properties.name_1 + 
+            '<br><strong>Municipio:</strong> ' + feature.properties.name_2 + '<br><strong>Resguardo Indigena:</strong> ' 
+            + feature.properties.NOMBRE + '<br><strong>Parque Nacional Natural:</strong> ' + feature.properties.Nombre_1
+            + '<br><strong>Cuenca:</strong> ' + feature.properties.Nombre_12);
+        }}});
+
+
+        // 2015 //////////////////////////////////
+        var IncendiosBosques_2015 = L.geoJSON(IncendiosBosques_2015, {
+        style: function(feature) {
+        return {
+            color: 'red',     // Border color
+            weight: 1.5,          // Border thickness
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Year && feature.properties.Hectareas && feature.properties.name_1 && feature.properties.name_2 && feature.properties.NOMBRE && feature.properties.Nombre_1 && feature.properties.Nombre_12) {
+            // Redondear las hectáreas a tres decimales
+            var hectareas = feature.properties.Hectareas.toFixed(3);
+            
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>Hectáreas de Bosque perdidas por Incendios:</strong><br>' +
+                '<strong>Año:</strong> ' + feature.properties.Year + '<br><strong>Hectareas:</strong> ' + 
+            hectareas + '<br><strong>Departamento:</strong> ' + feature.properties.name_1 + 
+            '<br><strong>Municipio:</strong> ' + feature.properties.name_2 + '<br><strong>Resguardo Indigena:</strong> ' 
+            + feature.properties.NOMBRE + '<br><strong>Parque Nacional Natural:</strong> ' + feature.properties.Nombre_1
+            + '<br><strong>Cuenca:</strong> ' + feature.properties.Nombre_12);
+        }}});
+
+
+
+        // 2016 //////////////////////////////////
+        var IncendiosBosques_2016 = L.geoJSON(IncendiosBosques_2016, {
+        style: function(feature) {
+        return {
+            color: 'red',     // Border color
+            weight: 1.5,          // Border thickness
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Year && feature.properties.Hectareas && feature.properties.name_1 && feature.properties.name_2 && feature.properties.NOMBRE && feature.properties.Nombre_1 && feature.properties.Nombre_12) {
+            // Redondear las hectáreas a tres decimales
+            var hectareas = feature.properties.Hectareas.toFixed(3);
+            
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>Hectáreas de Bosque perdidas por Incendios:</strong><br>' +
+                '<strong>Año:</strong> ' + feature.properties.Year + '<br><strong>Hectareas:</strong> ' + 
+            hectareas + '<br><strong>Departamento:</strong> ' + feature.properties.name_1 + 
+            '<br><strong>Municipio:</strong> ' + feature.properties.name_2 + '<br><strong>Resguardo Indigena:</strong> ' 
+            + feature.properties.NOMBRE + '<br><strong>Parque Nacional Natural:</strong> ' + feature.properties.Nombre_1
+            + '<br><strong>Cuenca:</strong> ' + feature.properties.Nombre_12);
+        }}});
+
+
+        // 2017 //////////////////////////////////
+        var IncendiosBosques_2017 = L.geoJSON(IncendiosBosques_2017, {
+        style: function(feature) {
+        return {
+            color: 'red',     // Border color
+            weight: 1.5,          // Border thickness
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Year && feature.properties.Hectareas && feature.properties.name_1 && feature.properties.name_2 && feature.properties.NOMBRE && feature.properties.Nombre_1 && feature.properties.Nombre_12) {
+            // Redondear las hectáreas a tres decimales
+            var hectareas = feature.properties.Hectareas.toFixed(3);
+            
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>Hectáreas de Bosque perdidas por Incendios:</strong><br>' +
+                '<strong>Año:</strong> ' + feature.properties.Year + '<br><strong>Hectareas:</strong> ' + 
+            hectareas + '<br><strong>Departamento:</strong> ' + feature.properties.name_1 + 
+            '<br><strong>Municipio:</strong> ' + feature.properties.name_2 + '<br><strong>Resguardo Indigena:</strong> ' 
+            + feature.properties.NOMBRE + '<br><strong>Parque Nacional Natural:</strong> ' + feature.properties.Nombre_1
+            + '<br><strong>Cuenca:</strong> ' + feature.properties.Nombre_12);
+        }}});
+
+
+        // 2018 //////////////////////////////////
+        var IncendiosBosques_2018 = L.geoJSON(IncendiosBosques_2018, {
+        style: function(feature) {
+        return {
+            color: 'red',     // Border color
+            weight: 1.5,          // Border thickness
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Year && feature.properties.Hectareas && feature.properties.name_1 && feature.properties.name_2 && feature.properties.NOMBRE && feature.properties.Nombre_1 && feature.properties.Nombre_12) {
+            // Redondear las hectáreas a tres decimales
+            var hectareas = feature.properties.Hectareas.toFixed(3);
+            
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>Hectáreas de Bosque perdidas por Incendios:</strong><br>' +
+                '<strong>Año:</strong> ' + feature.properties.Year + '<br><strong>Hectareas:</strong> ' + 
+            hectareas + '<br><strong>Departamento:</strong> ' + feature.properties.name_1 + 
+            '<br><strong>Municipio:</strong> ' + feature.properties.name_2 + '<br><strong>Resguardo Indigena:</strong> ' 
+            + feature.properties.NOMBRE + '<br><strong>Parque Nacional Natural:</strong> ' + feature.properties.Nombre_1
+            + '<br><strong>Cuenca:</strong> ' + feature.properties.Nombre_12);
+        }}});
+
+
+        // 2019 //////////////////////////////////
+        var IncendiosBosques_2019 = L.geoJSON(IncendiosBosques_2019, {
+        style: function(feature) {
+        return {
+            color: 'red',     // Border color
+            weight: 1.5,          // Border thickness
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Year && feature.properties.Hectareas && feature.properties.name_1 && feature.properties.name_2 && feature.properties.NOMBRE && feature.properties.Nombre_1 && feature.properties.Nombre_12) {
+            // Redondear las hectáreas a tres decimales
+            var hectareas = feature.properties.Hectareas.toFixed(3);
+            
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>Hectáreas de Bosque perdidas por Incendios:</strong><br>' +
+                '<strong>Año:</strong> ' + feature.properties.Year + '<br><strong>Hectareas:</strong> ' + 
+            hectareas + '<br><strong>Departamento:</strong> ' + feature.properties.name_1 + 
+            '<br><strong>Municipio:</strong> ' + feature.properties.name_2 + '<br><strong>Resguardo Indigena:</strong> ' 
+            + feature.properties.NOMBRE + '<br><strong>Parque Nacional Natural:</strong> ' + feature.properties.Nombre_1
+            + '<br><strong>Cuenca:</strong> ' + feature.properties.Nombre_12);
+        }}});
+
+
+        // 2020 //////////////////////////////////
+        var IncendiosBosques_2020 = L.geoJSON(IncendiosBosques_2020, {
+        style: function(feature) {
+        return {
+            color: 'red',     // Border color
+            weight: 1.5,          // Border thickness
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Year && feature.properties.Hectareas && feature.properties.name_1 && feature.properties.name_2 && feature.properties.NOMBRE && feature.properties.Nombre_1 && feature.properties.Nombre_12) {
+            // Redondear las hectáreas a tres decimales
+            var hectareas = feature.properties.Hectareas.toFixed(3);
+            
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>Hectáreas de Bosque perdidas por Incendios:</strong><br>' +
+                '<strong>Año:</strong> ' + feature.properties.Year + '<br><strong>Hectareas:</strong> ' + 
+            hectareas + '<br><strong>Departamento:</strong> ' + feature.properties.name_1 + 
+            '<br><strong>Municipio:</strong> ' + feature.properties.name_2 + '<br><strong>Resguardo Indigena:</strong> ' 
+            + feature.properties.NOMBRE + '<br><strong>Parque Nacional Natural:</strong> ' + feature.properties.Nombre_1
+            + '<br><strong>Cuenca:</strong> ' + feature.properties.Nombre_12);
+        }}});
+
+
+        // 2021 //////////////////////////////////
+        var IncendiosBosques_2021 = L.geoJSON(IncendiosBosques_2021, {
+        style: function(feature) {
+        return {
+            color: 'red',     // Border color
+            weight: 1.5,          // Border thickness
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Year && feature.properties.Hectareas && feature.properties.name_1 && feature.properties.name_2 && feature.properties.NOMBRE && feature.properties.Nombre_1 && feature.properties.Nombre_12) {
+            // Redondear las hectáreas a tres decimales
+            var hectareas = feature.properties.Hectareas.toFixed(3);
+            
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>Hectáreas de Bosque perdidas por Incendios:</strong><br>' +
+                '<strong>Año:</strong> ' + feature.properties.Year + '<br><strong>Hectareas:</strong> ' + 
+            hectareas + '<br><strong>Departamento:</strong> ' + feature.properties.name_1 + 
+            '<br><strong>Municipio:</strong> ' + feature.properties.name_2 + '<br><strong>Resguardo Indigena:</strong> ' 
+            + feature.properties.NOMBRE + '<br><strong>Parque Nacional Natural:</strong> ' + feature.properties.Nombre_1
+            + '<br><strong>Cuenca:</strong> ' + feature.properties.Nombre_12);
+        }}});
+
+
+        // 2022 //////////////////////////////////
+        var IncendiosBosques_2022 = L.geoJSON(IncendiosBosques_2022, {
+        style: function(feature) {
+        return {
+            color: 'red',     // Border color
+            weight: 1.5,          // Border thickness
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Year && feature.properties.Hectareas && feature.properties.name_1 && feature.properties.name_2 && feature.properties.NOMBRE && feature.properties.Nombre_1 && feature.properties.Nombre_12) {
+            // Redondear las hectáreas a tres decimales
+            var hectareas = feature.properties.Hectareas.toFixed(3);
+            
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>Hectáreas de Bosque perdidas por Incendios:</strong><br>' +
+                '<strong>Año:</strong> ' + feature.properties.Year + '<br><strong>Hectareas:</strong> ' + 
+            hectareas + '<br><strong>Departamento:</strong> ' + feature.properties.name_1 + 
+            '<br><strong>Municipio:</strong> ' + feature.properties.name_2 + '<br><strong>Resguardo Indigena:</strong> ' 
+            + feature.properties.NOMBRE + '<br><strong>Parque Nacional Natural:</strong> ' + feature.properties.Nombre_1
+            + '<br><strong>Cuenca:</strong> ' + feature.properties.Nombre_12);
+        }}});
+
+
+        // 2023 //////////////////////////////////
+        var IncendiosBosques_2023 = L.geoJSON(IncendiosBosques_2023, {
+        style: function(feature) {
+        return {
+            color: 'red',     // Border color
+            weight: 1.5,          // Border thickness
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Year && feature.properties.Hectareas && feature.properties.name_1 && feature.properties.name_2 && feature.properties.NOMBRE && feature.properties.Nombre_1 && feature.properties.Nombre_12) {
+            // Redondear las hectáreas a tres decimales
+            var hectareas = feature.properties.Hectareas.toFixed(3);
+            
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>Hectáreas de Bosque perdidas por Incendios:</strong><br>' +
+                '<strong>Año:</strong> ' + feature.properties.Year + '<br><strong>Hectareas:</strong> ' + 
+            hectareas + '<br><strong>Departamento:</strong> ' + feature.properties.name_1 + 
+            '<br><strong>Municipio:</strong> ' + feature.properties.name_2 + '<br><strong>Resguardo Indigena:</strong> ' 
+            + feature.properties.NOMBRE + '<br><strong>Parque Nacional Natural:</strong> ' + feature.properties.Nombre_1
+            + '<br><strong>Cuenca:</strong> ' + feature.properties.Nombre_12);
+        }}});
+
+
+
+        // 2001  2023 //////////////////////////////////
+        var IncendiosBosques_2001_2023 = L.geoJSON(IncendiosBosques_2001_2023, {
+        style: function(feature) {
+        return {
+            color: 'red',     // Border color
+            weight: 1.5,          // Border thickness
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Year && feature.properties.Hectareas && feature.properties.name_1 && feature.properties.name_2 && feature.properties.NOMBRE && feature.properties.Nombre_1 && feature.properties.Nombre_12) {
+        // Redondear las hectáreas a tres decimales
+        var hectareas = feature.properties.Hectareas.toFixed(3);
+            
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>Hectáreas de Bosque perdidas por Incendios:</strong><br>' +
+                '<strong>Año:</strong> ' + feature.properties.Year + '<br><strong>Hectareas:</strong> ' + 
+            hectareas + '<br><strong>Departamento:</strong> ' + feature.properties.name_1 + 
+            '<br><strong>Municipio:</strong> ' + feature.properties.name_2 + '<br><strong>Resguardo Indigena:</strong> ' 
+            + feature.properties.NOMBRE + '<br><strong>Parque Nacional Natural:</strong> ' + feature.properties.Nombre_1
+            + '<br><strong>Cuenca:</strong> ' + feature.properties.Nombre_12);
+        }}});
+        
+
+//////////
+////////// Layer Control Incendios
+//////////
+var overlayMapsIncendios = {
+    
+    "Histórico 2001 - 2023": IncendiosBosques_2001_2023,
+    "2023": IncendiosBosques_2023,
+    "2002": IncendiosBosques_2002,
+    "2003": IncendiosBosques_2003,
+    "2004": IncendiosBosques_2004,
+    "2005": IncendiosBosques_2005,
+    "2006": IncendiosBosques_2006,
+    "2007": IncendiosBosques_2007,
+    "2008": IncendiosBosques_2008,
+    "2009": IncendiosBosques_2009,
+    "2010": IncendiosBosques_2010,
+    "2011": IncendiosBosques_2011,
+    "2012": IncendiosBosques_2012,
+    "2013": IncendiosBosques_2013,
+    "2014": IncendiosBosques_2014,
+    "2015": IncendiosBosques_2015,
+    "2016": IncendiosBosques_2016,
+    "2017": IncendiosBosques_2017,
+    "2018": IncendiosBosques_2018,
+    "2019": IncendiosBosques_2019,
+    "2020": IncendiosBosques_2020,
+    "2021": IncendiosBosques_2021,
+    "2022": IncendiosBosques_2022,
+    "2001": IncendiosBosques_2001,
+    
+};
+
+// Crear el control de capas 
+var layerControlIncendios = L.control.layers(null, overlayMapsIncendios, { collapsed: false, position: 'topright' })
+.addTo(map);
+
+// Seleccionar el contenedor del control de capas
+var layerControlContainerIncendios = layerControlIncendios.getContainer();
+
+
+// Crear el elemento de título para los incendios
+var titleElementIncendios = document.createElement('div');
+titleElementIncendios.innerHTML = "<strong>Año Incendio</strong>";
+titleElementIncendios.style.textAlign = 'center';
+titleElementIncendios.style.padding = '5px';
+titleElementIncendios.style.fontSize = '16px';
+titleElementIncendios.style.backgroundColor = '#ffffff';
+titleElementIncendios.style.marginBottom = '0px';
+layerControlContainerIncendios.style.marginTop = '0px';
+
+// Insertar el título antes del contenido del control de capas
+layerControlContainerIncendios.parentNode.insertBefore(titleElementIncendios, layerControlContainerIncendios);
+
+
+
+
+
+
+
+
+
+
+
+// Definir las capas de incendios bosques por año
+var overlayMapsLeyenda = {
+    
+    "Parques Nacionales Naturales": ParquesNacionalesNaturales,
+    "Resguardo Kogui Malayo Arhuaco": ResguardoKMA,
+    "Resguardo Arhuaco": ResguardoArhuaco,
+    "Resguardo Kankuamo": ResguardoKankuamo,
+    "Cuencas Hidrográficas SNSM": Cuencas_SNSM,
+    "Sitios Sagrados Decreto 1500" : SitiosSagrados1500,
+    
+};
+
+// Crear el control de capas 
+var layerControlLeyenda = L.control.layers(null, overlayMapsLeyenda, { collapsed: false, position: 'topleft' })
+.addTo(map);
+
+// Seleccionar el contenedor del control de capas
+var layerControlContainerLeyenda = layerControlLeyenda.getContainer();
+
+
+// Insertar el título antes del contenido del control de capas
+layerControlContainerLeyenda.parentNode.insertBefore(titleElementLeyenda, layerControlContainerLeyenda);
+
+
+    </script>
+</body>
+</html>
+

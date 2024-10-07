@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analisis Incendios Rio Frio y Sevilla</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <style>
+        .titulomapaRioFrioSevilla {
+            margin: 0; 
+            padding: 10px; 
+            font-size: 12px; 
+            line-height: 0.2; 
+            text-align: center;
+            position: fixed; /* Fija el título en la parte superior */
+            top: 0; /* Mantén el título en la parte superior de la página */
+            left: 0; /* Alinea el título a la izquierda */
+            width: 100%; /* Asegura que ocupe todo el ancho de la pantalla */
+            background-color: rgb(251, 245, 236);; /* Fondo blanco para que no se mezcle con el contenido */
+            z-index: 1000; /* Asegura que esté por encima de otros elementos */
+            box-shadow: 0 10px 5px rgba(0,0,0,0.1); /* Añade una ligera sombra para darle efecto de separación */
+        }
+
+        .introduccion {
+            padding: 70px; 
+            font-size: 17px; 
+            line-height: 1.5; 
+            text-align: center; 
+            max-width: 1050px;
+            margin: 0 auto; /* Ajuste da margem para reduzir o espaço */
+        }
+
+        #grafico1 {
+
+            padding: 20px; 
+            font-size: 17px; 
+            line-height: 1.7; 
+            text-align: center;
+            max-width: 600px;;
+            margin: 0 auto;
+            background-color: #fff;
+            box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        .descripcion {
+            padding: 10px; 
+            font-size: 17px; 
+            line-height: 1.5; 
+            text-align: center;
+            max-width: 1050px;
+            margin: 10px auto; /* Reducir espacio superior e inferior */
+        }
+
+        #grafico2 {
+            padding: 20px; 
+            font-size: 17px; 
+            line-height: 1.7; 
+            text-align: center;
+            max-width: 1200px;
+            max-height: 600px;
+            margin: 50px auto; /* Igualar el margen al de las gráficas 3 y 4 */
+            background-color: #fff;
+            box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        .descripcion1 {
+            padding: 10px; 
+            font-size: 17px; 
+            line-height: 1.5; 
+            text-align: center;
+            max-width: 1050px;
+            margin: 10px auto; /* Reducir espacio superior e inferior */
+        }
+
+        #grafico3, #grafico4 {
+            padding: 20px; 
+            font-size: 17px; 
+            line-height: 1.7; 
+            text-align: center;
+            max-width: 1200px;
+            max-height: 600px;
+            margin: 50px auto; /* Igualar el margen al de las gráficas 3 y 4 */
+            background-color: #fff;
+            box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+
+        .descripcion_incendios_parques {
+            padding: 10px; 
+            font-size: 17px; 
+            line-height: 1.5; 
+            text-align: center;
+            max-width: 1050px;
+            margin: 10px auto; /* Reducir espacio superior e inferior */
+        }
+
+
+        .descripcion_veredas {
+            padding: 10px; 
+            font-size: 17px; 
+            line-height: 1.5; 
+            text-align: center;
+            max-width: 1050px;
+            margin: 10px auto; /* Reducir espacio superior e inferior */
+        }
+
+
+        #graficobarras_veredas {
+            padding: 20px; 
+            font-size: 17px; 
+            line-height: 1.7; 
+            text-align: center;
+            max-width: 1200px;
+            max-height: 500px;
+            margin: 50px auto; /* Igualar el margen al de las gráficas 3 y 4 */
+            background-color: #fff;
+            box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+
+        .descripcion_ecosistemas {
+            padding: 10px; 
+            font-size: 17px; 
+            line-height: 1.5; 
+            text-align: center;
+            max-width: 1050px;
+            margin: 10px auto; /* Reducir espacio superior e inferior */
+        }
+
+        #graficobarras1 {
+            max-width: 1200px; 
+            max-height: 600px; 
+            margin: 50px auto; /* Reducir espacio superior e inferior */
+            display: flex;
+            justify-content: center;
+        }
+
+
+        #graficobarras2 {
+            max-width: 1200px; 
+            max-height: 800px; 
+            margin: 50px auto; /* Reducir espacio superior e inferior */
+            display: flex;
+            justify-content: center;
+        }
+
+
+        #graficobarras_altitudes {
+            max-width: 1200px; 
+            max-height: 600px; 
+            margin: 50px auto; /* Reducir espacio superior e inferior */
+            display: flex;
+            justify-content: center;
+        }
+
+    </style>
+
+</head>
+<body>
+    <div class="titulomapaRioFrioSevilla">
+        <h1>Análisis de la pérdida de cobertura arbórea debido a Incendios en las cuencas de Río Frío y Sevilla 2001 - 2023</h1>
+    </div>
+
+    <div class="introduccion">
+        <p>La pérdida de cobertura arbórea por causa de incendios entre 2001 y 2023 fue de <strong>681.29 hectáreas</strong>
+            en las cuencas de Río Frío y Sevilla. De este total, en Sevilla se perdieron, <strong>554.54 hectáreas</strong>, mientras
+            que en Río Frío <strong>126.74 hectáreas</strong>. En este análisis se presenta cómo fue la evolución de los 
+            incendios dentro y fuera del Resguardo Kogui Malayo Arhuaco, del Parque Sierra Nevada y de las Veredas
+            ubicadas en la parte alta del Río Frío. En la segunda parte, se muestran cómo se vieron afectados los ecosistemas de ecosistemas
+        de las dos cuencas y su relación con la altura sobre el nível del mar. </p>
+    </div>
+
+
+    <!--/////////// Primer gráfico de torta -->
+    <!--///////////////////////////////// -->
+
+    <div id="grafico1"></div>
+
+    <script>
+        var data = [{
+            values: [126.74, 554.54],
+            labels: ['Río Frío', 'Río Sevilla'],
+            type: 'pie',
+            textinfo: 'value',
+            marker: {
+            colors: ['#FFAF00', '#F56A20'],
+            font: {
+                    size: 15,
+                    weight: 'bold'  // Título en negrilla
+                }
+            }
+        }];
+
+        var layout = {
+            title: {
+                text: 'Hectáreas de bosque perdidas por incendios de 2001 a 2023',
+                font: {
+                    size: 16,
+                    weight: 'bold'
+                }
+            },
+            height: 500,
+            width: 600
+        };
+
+        Plotly.newPlot('grafico1', data, layout);
+    </script>
+
+    <div class="descripcion">
+    <p>Las hectáreas de bosque perdidas por los incendios fueron diferentes cada año; sin embargo, 
+        en la cuenca del Río Frío tiene un comportamiento más estable, en la medida que solo en <strong>2017</strong>
+        hubo un incremento significativo en las coberturas perdidas con <strong>30.494 hectáreas.</strong> Por 
+        su parte, en Sevilla se han registrado varios años con grandes cantidades de bosques quemados, como fue 
+        en <strong>2008</strong>, <strong>2015</strong>, y <strong>2017</strong> con <strong>136.138 hectáreas.</strong></p>
+    </div>
+
+
+    <!-- ///////////  Segundo gráfico de líneas -->
+    <!--///////////////////////////////// -->
+
+    <div id="grafico2"></div>
+    
+    <script>
+        var year = [2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023];
+        var rioFrio = [0.258, 0.308, 4.848, 3.125, 1.439, 0.767, 4.454, 1.51, 0.642, 1.607, 2.519, 1.39, 1.735, 3.558, 3.628, 8.571, 30.494, 2.96, 10.171, 12.145, 8.75, 12.873, 8.988];
+        var rioSevilla = [0.721, 0.875, 4.224, 0.826, 6.899, 6.164, 6.656, 43.037, 5.815, 5.167, 6.349, 6.209, 6.146, 20.792, 51.178, 32.642, 136.138, 64.751, 25.929, 46.688, 14.202, 47.384, 15.756];
+
+        var trace1 = {
+            x: year,
+            y: rioFrio,
+            mode: 'lines+markers',
+            name: 'Río Frío',
+            line: {color: 'blue'},
+            marker: {size: 10}
+        };
+
+        var trace2 = {
+            x: year,
+            y: rioSevilla,
+            mode: 'lines+markers',
+            name: 'Río Sevilla',
+            line: {color: 'green'},
+            marker: {size: 10}
+        };
+
+        var layout1 = {
+            title: {
+                text: 'Hectáreas de bosque perdidas por incendios entre 2001 a 2023 en las cuencas de Río Frío y Sevilla',
+                font: {
+                   size: 16,
+                    weight: 'bold'
+                }
+            },
+            xaxis: {
+            title: 'Año',
+            tickvals: year,  // Asegura que todos los años se muestren en el eje X
+            
+        },
+        yaxis: {
+            title: 'Hectáreas'
+        },
+        hovermode: 'closest'
+        };
+
+        var data1 = [trace1, trace2];
+
+        Plotly.newPlot('grafico2', data1, layout1);
+
+    </script>
+
+    <div class="descripcion1">
+    <p>En las dos siguientes gráficas se analiza la perdida de cobertura arbórea por causa de incendios
+        dentro del <strong>Resguardo Kogui Malayo Arhuaco</strong> y en el <strong>Parque Sierra Nevada de Santa Marta</strong>.
+        Para comenzar, de 2001 a 2023, en el área del Resguardo que está dentro de la cuenca de Río Frío se quemaron 
+        <strong>30.777 hectáreas</strong> que equivalen al <strong>24%</strong> de todos los incendios en el Río Frío. 
+        En la cuenca del Río Sevilla la cobertura perdida fue de <strong>33.023 hectáreas</strong>, que representa solo el <strong>6%</strong>. A pesar que, las 
+        áreas tengan un tamaño similar, hay una mayor concentración y ocurrencias de quemas dentro del área del Resguardo en Río Frío que en la cuenca del Sevilla.
+        Em ambos casos, se puede observar que los años más critícos corresponden a 2015, 2016 y 2017, cuando se registró 
+        el incremento más rápido de hectáreas ardidas en el período estudiado.</p>
+    </div>
+
+
+    <!-- /////////// tercer gráfico de líneas -->
+    <!--///////////////////////////////// -->
+
+    <div id="grafico3"></div>
+    
+    <script>
+        var year = [2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023];
+        var rioFrio = [0.052, 0.104, 0, 0, 0.206, 0.203, 0.103, 0.31, 0.206, 0, 0.102, 0.312, 0.746, 0.26, 3.097, 5.263, 6.436, 0.618, 1.153, 3.323, 0.873, 4.306, 3.107];
+        var rioSevilla = [0.413, 0.361, 0.568, 0.361, 0.155, 4.958, 0.93, 0.256, 0.36, 0.155, 1.672, 0.825, 0.463, 1.298, 0.102, 3.917, 8.951, 0.744, 1.117, 1.46, 0.907, 0.423, 2.619];
+
+        var trace1 = {
+            x: year,
+            y: rioFrio,
+            mode: 'lines+markers',
+            name: 'Río Frío',
+            line: {color: 'orange'},
+            marker: {size: 10}
+        };
+
+        var trace2 = {
+            x: year,
+            y: rioSevilla,
+            mode: 'lines+markers',
+            name: 'Río Sevilla',
+            line: {color: 'purple'},
+            marker: {size: 10}
+        };
+
+        var layout1 = {
+            title: {
+                text: 'Hectáreas de bosque perdidas por incendios entre 2001 a 2023 dentro del Resguardo Kogui Malayo Arhuaco en las cuencas de Río Frío y Sevilla',
+                font: {
+                    size: 15
+                }
+            },
+            xaxis: {
+            title: 'Año',
+            tickvals: year,  // Asegura que todos los años se muestren en el eje X
+            
+        },
+        yaxis: {
+            title: 'Hectáreas'
+        },
+        hovermode: 'closest'
+        };
+
+        var data1 = [trace1, trace2];
+
+        Plotly.newPlot('grafico3', data1, layout1);
+        
+    </script>
+
+
+    <div class="descripcion_incendios_parques">
+    <p>Dentro del área del Parque Sierra Nevada que pertenece a las cuencas de Frío y Sevilla, de 2001 a 2023, se perdieron
+        <strong>43.149 hectáreas</strong>. De este total, en Río Frío se registraron <strong>15.228 hectáreas</strong> que representan
+        el <strong>12%</strong> de todos los incendios en la cuenca, y en el Sevilla <strong>27.921 hectáreas</strong> que 
+        equivalen al <strong>5%</strong>. Nuevamente aquí se puede notar que hay una mayor concentración e número de hectáreas 
+        perdidas por incendios dentro del área del Parque Sierra Nevada la cuenca del Río Frío que en la del Sevilla .</p>
+
+
+    <!-- /////////// Cuarto gráfico de líneas -->
+    <!--///////////////////////////////// -->
+        <div id="grafico4"></div>
+    
+    <script>
+    var year = [2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023];
+    var rioFrio = [0.104, 0, 0, 0, 0.154, 0.203, 0.052, 0, 0.206, 0, 0.102, 0.156, 0.488, 0.103, 2.995, 3.868, 3.062, 0.155, 0.452, 0.206, 0.359, 1.251, 1.311];
+    var rioSevilla = [0.411, 0.31, 0.413, 0.206, 0.155, 4.702, 0.672, 0.205, 0.258, 0.155, 0.525, 1.029, 0.463, 1.247, 0.102, 3.712, 8.059, 0.306, 0.772, 1.099, 0.7, 0.103, 2.309];
+
+    var trace1 = {
+        x: year,
+        y: rioFrio,
+        mode: 'lines+markers',
+        name: 'Río Frío',
+        line: {color: 'orange'},
+        marker: {size: 10}
+    };
+
+    var trace2 = {
+        x: year,
+        y: rioSevilla,
+        mode: 'lines+markers',
+        name: 'Río Sevilla',
+        line: {color: 'purple'},
+        marker: {size: 10}
+    };
+
+    var layout1 = {
+        title: {
+            text: 'Hectáreas de bosque perdidas por incendios 2001 a 2023 dentro del Parque Sierra Nevada en las cuencas de Río Frío y Sevilla',
+            font: {
+                size: 15
+            }
+        },
+        xaxis: {
+        title: 'Año',
+        tickvals: year,  // Asegura que todos los años se muestren en el eje X
+        
+    },
+    yaxis: {
+        title: 'Hectáreas'
+    },
+    hovermode: 'closest'
+    };
+
+    var data1 = [trace1, trace2];
+
+    Plotly.newPlot('grafico4', data1, layout1);
+    
+    </script>
+
+
+<div class="descripcion_veredas">
+    <p>En la segunda parte de este análisis se examinará la pérdida de bosque en las veredas de la cuenca alta del Río Frío, y 
+        también se verá cómo se vieron afectados los ecosistemas por los incendios. De las seis veredas estudiadas, la
+        <strong>Reserva Alta</strong> registró el mayor número de hectáreas quemadas con un total de <strong>15.531 hectáreas</strong>. Este 
+            es un dato importante de mencionar, una vez que la vereda de Reserva Alta se encuentra ubicada en la parte más elevada y distante 
+            de la cuenca, lo que afecta ecosistemas relevantes como el páramo y el bosque andino húmedo.</p>
+    </div>
+
+    <!-- /////////// Gráfico VEREDAS -->
+    <!--///////////////////////////////// -->
+
+    <div id="graficobarras_veredas" style="width: 900px; height: 600px;"></div>
+
+<script>
+    var data = [{
+        type: 'bar',
+        x: ['Reserva Alta', 'Nuevo Mundo', 'Siberia', 'Palmichal Bajo', 'Reserva Baja', 'Palmichal Alto'],
+        y: [15.531, 3.662, 3.355, 2.464, 2.093, 1.474],
+        orientation: 'v', // Gráfico de barras vertical
+        marker: {
+            color: '#5D8AA8',
+            width: 1
+        }
+    }];
+
+    var layout = {
+        title: 'Perdida de cobertura arbórea en las veredas de la cuenca alta de Río Frío',
+        xaxis: {
+            title: 'Veredas',
+            showgrid: true,
+            zeroline: false,
+            tickfont: {
+                size: 12 // Ajuste del tamaño de la fuente para el eje X
+            }
+        },
+        yaxis: {
+            title: 'Hectáreas',
+            showgrid: true,
+            zeroline: false
+        },
+        height: 500,
+        width: 900,
+        margin: {
+            l: 50, // Ajuste del margen izquierdo
+            r: 50,
+            t: 50,
+            b: 100 // Más espacio para las etiquetas del eje X
+        },
+        bargap: 0.5 // Aumentar el espacio entre las barras para hacerlas más delgadas
+    };
+
+    Plotly.newPlot('graficobarras_veredas', data, layout);
+</script>
+
+
+<div class="descripcion_ecosistemas">
+    <p>Los ecosistemas que se analizaron fueron tomados del <strong>Mapa de ecosistemas continentales, costeros y marinos
+         de Colombia de 2017</strong> producido por el Instituto de Hidrología, Meteorología y Estudios Ambientales (Ideam), 
+         el Instituto de Investigación de Recursos Biológicos Alexander von Humboldt (Instituto Humboldt), 
+         el Instituto de Investigaciones Marinas y Costeras José Benito Vives de Andréis (Invemar), y el Instituto Geográfico 
+         Agustín Codazzi (IGAC). En las dos graficas a continuación, se presenta el numero de hectáreas perdidas por causa de los 
+         incendios en cada ecosistema.
+    </div>
+
+
+    <!-- /////////// Gráfico de Barras1 -->
+    <!--///////////////////////////////// -->
+
+    <div id="graficobarras1" style="width: 900px; height: 600px;"></div>
+
+    <script>
+    var data = [{
+        type: 'bar',
+        x: [32.15, 21.51, 19.9, 19.16, 13.51, 11.98, 9.68, 5.17, 4.7, 3.18, 2.09, 1.28, 0.53, 0.16, 0.05, 0.05],
+        y: ['Agroecosistema platanero y bananero', 'Bosque andino húmedo', 'Vegetación secundaria', 'Agroecosistema ganadero', 'Complejos rocosos de los Andes', 
+            'Agroecosistema de mosaico de pastos', 'Agroecosistema de mosaico de cultivos y pastos', 
+            'Páramo', 'Agroecosistema palmero', 'Transicional transformado costero', 'Bosque fragmentado con pastos y cultivos', 
+            'Bosque subandino húmedo', 'Agroecosistema cafetero', 'Arbustal inundable costero', 'Bosque basal seco', 
+            'Agroecosistema de mosaico de cultivos y pastos'],
+        orientation: 'h', // Gráfico de barras horizontal
+        marker: {
+            color: 'green',
+            width: 1
+        }
+    }];
+
+    var layout = {
+        title: 'Ecosistemas afectados por incendios cuenca Río Frío 2001 - 2023',
+        xaxis: {
+            title: 'Hectáreas',
+            showgrid: true,
+            zeroline: false
+        },
+        yaxis: {
+            title: 'Ecosistemas',
+            autorange: 'reversed', // Esto organiza las barras de mayor a menor en el eje Y
+            tickfont: {
+                size: 12 // Ajuste del tamaño de la fuente para el eje Y
+            }
+        },
+        height: 600,
+        width: 1300,
+        margin: {
+            l: 300, // Más espacio para las etiquetas del eje Y
+            r: 50,
+            t: 50,
+            b: 50
+        }
+    };
+
+    Plotly.newPlot('graficobarras1', data, layout);
+</script>
+
+
+    <!-- /////////// Gráfico de Barras2 -->
+    <!--///////////////////////////////// -->
+
+    <div id="graficobarras2" style="width: 900px; height: 600px;"></div>
+
+    <script>
+    var data = [{
+        type: 'bar',
+        x: [151.5, 122.04, 65.51, 59.5, 53.36, 48.25, 29.07, 25.8, 22.1, 17.36, 13.38, 10.6, 10.58, 10.02, 8.46, 7.4, 6.87, 5.52, 4.92, 4.74, 3.57, 3.33, 2.1, 0.87, 0.72, 0.39, 0.36, 0.31, 0.23],
+        y: ['Arbustal inundable costero, Agroecosistema palmero', 'Agroecosistema ganadero', 'Agroecosistema platanero y bananero', 
+        'Bosque Seco', 'Agroecosistema de mosaico de pastos', 'Vegetacion secundaria', 
+        'Arbustal inundable basal', 'Transicional transformado', 'Bosque andino humedo', 'Complejos rocosos de los andes', 
+        'Agroecosistema de mosaico de cultivos y pastos', 'Transicional transformado costero', 'Laguna costera', 'Paramo', 
+        'Bosque subandino humedo', 'Bosque fragmentado con pastos y cultivos', 'Bosque fragmentado con vegetacion secundaria', 
+        'Agroecosistema de mosaico de cultivos', 'pastos y espacios naturales', 'Arbustal basal humedo', 'Manglar de aguas mixohalinas', 
+        'Bosque de galeria basal humedo', 'Laguna Aluvial', 'Rio de Aguas Blancas', 'Agroecosistema de mosaico de cultivos', 
+        'Territorio artificializado', 'Agroecosistema de cultivos permanentes', 'Arbustal subandino humedo', 'Zonas pantanosas costeras'],
+        orientation: 'h', // Gráfico de barras horizontal
+        marker: {
+            color: '006b26',
+            width: 2
+        }
+    }];
+
+    var layout = {
+        title: 'Ecosistemas afectados por incendios cuenca Río Sevilla 2001 - 2023',
+        xaxis: {
+            title: 'Hectáreas',
+            showgrid: true,
+            zeroline: false
+        },
+        yaxis: {
+            title: 'Ecosistemas',
+            autorange: 'reversed', // Esto organiza las barras de mayor a menor en el eje Y
+            tickfont: {
+                size: 12 // Ajuste del tamaño de la fuente para el eje Y
+            }
+        },
+        height: 670,
+        width: 1300,
+        margin: {
+            l: 300, // Más espacio para las etiquetas del eje Y
+            r: 50,
+            t: 50,
+            b: 50
+        }
+    };
+
+    Plotly.newPlot('graficobarras2', data, layout);
+
+</script>
+
+<!-- /////////// Gráfico ALTURAS -->
+    <!--///////////////////////////////// -->
+
+    <div id="graficobarras_altitudes" style="width: 900px; height: 600px;"></div>
+
+<script>
+    var data = [
+        {
+            type: 'bar',
+            x: ['0 a 100', '100 - 500', '500 - 1,000', '1,000 - 1,500', '1,500 - 2,000', '2,000 - 2,500', 
+                '2,500 - 3,000', '3,000 - 3,500', '3,500 - 4,000', '4,000 en adelante'],
+            y: [56.453, 13.439, 14.025, 11.619, 21.964, 7.992, 4.299, 3.517, 0.153, 0.103], // Se añadió un valor más
+            name: 'Río Frío', // Etiqueta para la serie de Río Frío
+            marker: {
+                color: '#5D8AA8',
+                width: 1
+            }
+        },
+        {
+            type: 'bar',
+            x: ['0 a 100', '100 - 500', '500 - 1,000', '1,000 - 1,500', '1,500 - 2,000', '2,000 - 2,500', 
+                '2,500 - 3,000', '3,000 - 3,500', '3,500 - 4,000', '4,000 en adelante'],
+            y: [439.358, 25.662, 18.008, 29.74, 20.295, 7.8176, 6.697, 12.879, 0.156, 0.103],
+            name: 'Sevilla', // Etiqueta para la serie de Sevilla
+            marker: {
+                color: '#FFA07A',
+                width: 1
+            }
+        }
+    ];
+
+    var layout = {
+        title: 'Pérdida de cobertura arbórea a diferentes rangos de Altura - Río Frío y Sevilla',
+        xaxis: {
+            title: 'Metros sobre el Nivel del Mar',
+            showgrid: true,
+            zeroline: false,
+            tickfont: {
+                size: 12 // Ajuste del tamaño de la fuente para el eje X
+            }
+        },
+        yaxis: {
+            title: 'Hectáreas de bosque perdido por incendios',
+            showgrid: true,
+            zeroline: false,
+           
+        },
+        height: 500,
+        width: 900,
+        margin: {
+            l: 50, // Ajuste del margen izquierdo
+            r: 50,
+            t: 50,
+            b: 100 // Más espacio para las etiquetas del eje X
+        },
+        bargap: 0.5, // Aumentar el espacio entre las barras para hacerlas más delgadas
+        barmode: 'group' // Mostrar las barras agrupadas
+    };
+
+    Plotly.newPlot('graficobarras_altitudes', data, layout);
+</script>
+
+
+</script>
+
+</script>
+
+</body>
+</html>
+
+
+<div id="grafico2"></div>
+    

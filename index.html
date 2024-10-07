@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atlas de Incendios y Deforestación</title>
+    <style>
+        /* Estilo para el contenedor principal */
+        body {
+            background-color: #f5f5f5; /* Fondo gris claro */
+            font-family: 'Arial', sans-serif; /* Tipografía global */
+            margin: 0; /* Sin márgenes en el body */
+            padding: 20px; /* Espaciado en el contenedor principal */
+            color: #333; /* Color de texto oscuro */
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Centra los elementos horizontalmente */
+            padding: 20px;
+            border-radius: 10px; /* Bordes redondeados */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra para dar profundidad */
+            background-color: #ffffff; /* Fondo blanco para el contenedor */
+        }
+
+        /* Estilo para el título de la página */
+        .titulo_pagina {
+            text-align: center; /* Centrar el título */
+            color: rgb(12, 12, 12); /* Color del título */
+            margin-bottom: 20px; /* Espaciado inferior para separar del resto */
+            font-size: 24px; /* Aumentar tamaño de fuente */
+            font-weight: bold; /* Negrita */
+        }
+
+        /* Descripción principal */
+        .descripcion-pagina {
+            font-size: 16px; /* Aumentar tamaño de fuente */
+            line-height: 1.6; /* Espaciado entre líneas */
+            color: #555; /* Gris oscuro */
+            max-width: 70%; /* Aumentar ancho máximo */
+            margin: 0; /* Sin margen superior ni inferior */
+            align-self: flex-start; /* Mantiene la descripción alineada a la izquierda */
+            margin-bottom: 20px; /* Espaciado inferior para separar de la imagen */
+            padding: 10px; /* Espaciado interno */
+            border-left: 5px solid #ff894f; /* Borde izquierdo */
+        }
+
+        /* Estilo para la imagen */
+        .imagen {
+            max-width: 600px; /* Tamaño máximo adecuado */
+            width: 100%; /* Ocupa el 100% del contenedor */
+            height: auto; /* Mantiene la proporción de la imagen */
+            border-radius: 10px; /* Bordes redondeados */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); /* Sombra para dar profundidad */
+            margin-bottom: 20px; /* Espaciado inferior para separar de los círculos */
+        }
+
+        /* Contenedor para la imagen y círculos */
+        .contenido {
+            display: flex; /* Usar flexbox para alinear la imagen y los círculos */
+            justify-content: flex-start; /* Alinear a la izquierda */
+            align-items: flex-start; /* Alinear la parte superior */
+            width: 100%; /* Ocupa todo el ancho */
+        }
+
+        /* Contenedor para los círculos */
+        .contenedor-circulos {
+            display: grid; /* Usar grid para la disposición */
+            grid-template-columns: repeat(2, 1fr); /* Dos columnas */
+            gap: 30px; /* Espacio entre círculos */
+            justify-items: center; /* Centra los círculos en cada celda */
+            max-width: 100%; /* Asegura que no se exceda el contenedor */
+            margin-left: 160px; /* Aumentar espaciado a la izquierda para mover círculos más a la derecha */
+        }
+
+        /* Estilo para los círculos */
+        .circulo {
+            background-color: #ff894f; /* Color del círculo */
+            color: white;
+            width: 200px; /* Tamaño del círculo aumentado */
+            height: 200px; /* Tamaño del círculo aumentado */
+            border-radius: 50%; /* Hace que el elemento sea un círculo */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.3s; /* Transición para el color y el tamaño */
+            text-decoration: none; /* Eliminar el subrayado */
+            font-size: 16px; /* Aumentar tamaño de fuente */
+        }
+
+        .circulo:hover {
+            background-color: #ffaa80; /* Color al pasar el mouse */
+            transform: scale(1.1); /* Aumentar el tamaño al pasar el mouse */
+        }
+
+        /* Estilo para enlaces */
+        a {
+            color: white; /* Color de texto de los enlaces */
+            text-decoration: none; /* Sin subrayado */
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Contenedor principal -->
+    <div class="container">
+        <!-- Título principal -->
+        <h1 class="titulo_pagina">Atlas Interactivo sobre la pérdida de bosques por causa de Incendios en la Sierra Nevada de Santa Marta</h1>
+        
+        <!-- Descripción de la página -->
+        <div class="descripcion-pagina">
+            <p>El <strong>Mapa Interactivo</strong> presenta los cambios en la pérdida de cobertura arbórea
+                en la Sierra Nevada de Santa Marta durante el periodo de <strong>2001 - 2023.</strong> Muestra y analiza 
+                la deforestación y los bosques perdidos por causa de incendios. Los datos que se presentan
+                fueron obtenidos de la plataforma de <a href="https://www.globalforestwatch.org/" style="color: #0e0f0f;"><strong>Global Forest Watch</strong></a>.</p>
+        </div>
+
+        <!-- Contenedor de imagen y círculos -->
+        <div class="contenido">
+            <!-- Imagen a la izquierda -->
+            <img src="Imagenes/Sierra.jpg" alt="Sierra Nevada de Santa Marta" class="imagen">
+
+            <!-- Contenedor de círculos -->
+            <div class="contenedor-circulos">
+                <a href="SierraIncendios.html" class="circulo">Atlas Incendios<br> Sierra Nevada</a>
+                <a href="RioFrio_Sevilla.html" class="circulo">Atlas Incendios<br> Río Frío y Sevilla</a>
+                <a href="Analisis_Sierra.html" class="circulo">Análisis Incendios<br> Sierra Nevada de Santa Marta</a>
+                <a href="Analisis_FrioSevilla.html" class="circulo">Análisis Incendios<br> Río Frío y Sevilla</a>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

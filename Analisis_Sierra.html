@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analisis Incendios Sierra Nevada de Santa Marta</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <style>
+        .titulo_analisis_sierra {
+            margin: 0; 
+            padding: 10px; 
+            font-size: 12px; 
+            line-height: 0.2; 
+            text-align: center;
+            position: fixed; /* Fija el título en la parte superior */
+            top: 0; /* Mantén el título en la parte superior de la página */
+            left: 0; /* Alinea el título a la izquierda */
+            width: 100%; /* Asegura que ocupe todo el ancho de la pantalla */
+            background-color: rgb(251, 245, 236);; /* Fondo blanco para que no se mezcle con el contenido */
+            z-index: 1000; /* Asegura que esté por encima de otros elementos */
+            box-shadow: 0 10px 5px rgba(0,0,0,0.1); /* Añade una ligera sombra para darle efecto de separación */
+        }
+
+        .introduccion {
+            padding: 70px; 
+            font-size: 17px; 
+            line-height: 1.5; 
+            text-align: center; 
+            max-width: 1050px;
+            margin: 0 auto; /* Ajuste da margem para reduzir o espaço */
+        }
+
+
+        #grafico_incendios_2001_2023 {
+            padding: 20px; 
+            font-size: 17px; 
+            line-height: 1.7; 
+            text-align: center;
+            max-width: 1050px;
+            margin: 0 auto;
+            background-color: #fff;
+            box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        .Descripcion_Incendios_Cuencas {
+            padding: 10px; 
+            font-size: 17px; 
+            line-height: 1.5; 
+            text-align: center;
+            max-width: 1050px;
+            margin: 10px auto; /* Reducir espacio superior e inferior */
+        
+        }
+
+        #graficobarras_Incendios_Cuencas {
+            padding: 20px; 
+            font-size: 17px;
+            line-height: 1.7;
+            max-width: 1300px; 
+            max-height: 800px; 
+            margin: 50px auto; /* Reducir espacio superior e inferior */
+            display: flex;
+            justify-content: center;
+            background-color: #fff;
+            box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+
+        .Descripcion_Incendios_Resguardos {
+            padding: 10px; 
+            font-size: 17px; 
+            line-height: 1.5; 
+            text-align: center;
+            max-width: 1050px;
+            margin: 10px auto; /* Reducir espacio superior e inferior */
+        
+        }
+
+
+        #graficobarras_Incendios_Resguardos {
+            padding: 20px; 
+            font-size: 17px; 
+            line-height: 1.7; 
+            text-align: center;
+            max-width: 1200px;
+            max-height: 480px;
+            margin: 0 auto;
+            background-color: #fff;
+            box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+
+        #grafico_Incendios_Resguardo_2001_2023 {
+            padding: 20px; 
+            font-size: 17px; 
+            line-height: 1.7; 
+            text-align: center;
+            max-width: 1200px;
+            max-height: 600px;
+            margin: 50px auto; /* Igualar el margen al de las gráficas 3 y 4 */
+            background-color: #fff;
+            box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+
+        .Descripcion_Incendios_Parques {
+            padding: 10px; 
+            font-size: 17px; 
+            line-height: 1.5; 
+            text-align: center;
+            max-width: 1050px;
+            margin: 10px auto; /* Reducir espacio superior e inferior */
+        
+        }
+
+
+        #graficobarras_Incendios_Parques {
+            padding: 20px; 
+            font-size: 17px; 
+            line-height: 1.7; 
+            text-align: center;
+            max-width: 1200px;
+            max-height: 480px;
+            margin: 0 auto;
+            background-color: #fff;
+            box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+
+        #grafico_Incendios_ParqueSNSM_2001_2023 {
+            padding: 20px; 
+            font-size: 17px; 
+            line-height: 1.7; 
+            text-align: center;
+            max-width: 1200px;
+            max-height: 600px;
+            margin: 50px auto; /* Igualar el margen al de las gráficas 3 y 4 */
+            background-color: #fff;
+            box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+
+    </style>
+
+</head>
+<body>
+    <div class="titulo_analisis_sierra">
+        <h1>Análisis de la pérdida de cobertura arbórea debido a Incendios en la Sierra Nevada de Santa Marta</h1>
+    </div>
+
+    <div class="introduccion">
+        <p>La pérdida de cobertura arbórea por causa de incendios en la Sierra Nevada de Santa Marta durante el período de 
+            <strong>2001 a 2023</strong> fue de <strong>7,961.44 hectáreas</strong>. Los tres años más afectados corresponden a <strong>2017</strong> con 
+            <strong>1,262.36 hectáreas</strong>, seguido por <strong>2016</strong> con <strong>1,114.08 hectáreas</strong>, y 
+            <strong>2003</strong> con <strong>771.91 hectáreas.</strong> A continuación, se presenta un análisis sobre el impacto de los incendios en la Sierra Nevada.
+        En este orden, se examinará la cobertura de bosque quemada en cada cuenca, así como dentro de las áreas protegidas: Resguardos Indígenas y Parques Nacionales. </p>
+    </div>
+
+
+    <!-- /////////// GRAFICO INCENDIOS 2001 A 2023 -->
+    <!--///////////////////////////////// -->
+
+    <div id="grafico_incendios_2001_2023"></div>
+    
+    <script>
+        
+        var year = [2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023];
+        var rioFrio = [137.75, 84.01, 771.91, 117.08, 94.041, 106.39, 189.34, 257.08, 127.70, 164.55, 79.19, 143.96, 108.45, 433.32, 490.29, 1114.08, 1262.36, 516.96, 467.56, 365.61, 211.11, 404.24, 314.34];
+        
+        var trace1 = {
+            x: year,
+            y: rioFrio,
+            mode: 'lines+markers',
+            name: 'Río Frío',
+            line: {color: '5c2626'},
+            marker: {size: 10}
+        
+        };
+
+        var layout1 = {
+            title: {
+                text: 'Hectáreas de bosque perdidas por incendios entre 2001 a 2023 en la Sierra Nevada de Santa Marta',
+                font: {
+                    size: 16,
+                    weight: 'bold'  // Negrita
+                    
+                },
+            },
+            xaxis: {
+            title: 'Año',
+            tickvals: year,  // Asegura que todos los años se muestren en el eje X
+            
+        },
+        yaxis: {
+            title: 'Hectáreas'
+        },
+        hovermode: 'closest'
+        };
+
+        var data1 = [trace1];
+
+        Plotly.newPlot('grafico_incendios_2001_2023', data1, layout1);
+
+    </script>
+
+    <div class="Descripcion_Incendios_Cuencas">
+    <p>A nivel general, en la Sierra Nevada, entre los años 2001 y 2023, las cinco cuencas más afectadas por incendios correspondieron 
+        en primer lugar a la del 
+        <strong>río Fundación</strong> con <strong>921.72 hectáreas</strong>; seguida por la del <strong>río Aracataca</strong> 
+        con <strong>819.25 hectáreas</strong>; la del <strong>río Sevilla</strong> con <strong>556.73 hectáreas</strong>; 
+        en cuarto lugar, la del <strong>río Ariguaní</strong> con <strong>520.65 hectáreas</strong>; y en quinta posición, 
+        la del <strong>río Ranchería</strong> con <strong>453.87 hectáreas</strong>.</p>
+    </div>
+
+
+    <!-- /////////// GRAFICO CUENCAS -->
+    <!--///////////////////////////////// -->
+
+    <div id="graficobarras_Incendios_Cuencas"></div>
+
+    <script>
+        
+    var data = [{
+        type: 'bar',
+        x: [921.72, 819.25, 556.73, 520.65, 453.87, 407.65, 393.67, 332.33, 243.47, 201.73, 177.12, 152.85, 144.71, 132.73, 
+        126.75, 75.53, 64.72, 59.44, 49.13, 48.62, 38.61, 37.51, 30.58, 20.41, 19.68, 18.70, 18.45, 17.56, 16.29, 12.15, 4.15],
+        y: ['Cuenca Río Fundación', 'Cuenca Río Aracataca', 'Cuenca Río Sevilla', 'Cuenca Río Ariguaní', 'Cuenca Río Ranchería', 
+        'Cuenca Río Guatapurí', 'Cuenca Río Tapias', 'Cuenca Río Palomino', 'Cuenca Río Don Diego', 'Cuenca Río Badillo', 
+        'Cuenca Río Ancho', 'Cuenca Río Jerez', 'Cuenca Río Maluisa', 'Cuenca Río Cesarito', 'Cuenca Río Frío', 
+        'Cuenca Río Camarones', 'Cuenca Río Garupal', 'Cuenca Río Buritaca', 'Cuenca Río Guachaca', 'Cuenca Río Diluvio', 
+        'Cuenca Río Manzanares', 'Cuenca Río Alto Cesar', 'Cuenca Río Cañas', 'Cuenca Río Córdoba', 'Cuenca Río Piedra', 
+        'Cuenca Río Seco', 'Cuenca Río Mendihuaca', 'Cuenca Río San Salvador', 'Cuenca Río Gaira', 'Cuenca Río Toribío', 
+        'Cuenca Río San Francisco'],
+        orientation: 'h', // Gráfico de barras horizontal
+        marker: {
+            color: 'green',
+            width: 3
+        }
+    }];
+
+    var layout2 = {
+    title: {
+        text: 'Coberturas arbóreas perdidas por los incendios en las cuencas de la Sierra Nevada de Santa Marta 2001 - 2023',
+        font: {
+            size: 16, // Mesma fonte do primeiro gráfico
+            weight: 'bold'  // Negrito como no primeiro gráfico
+        },
+    },
+    xaxis: {
+        title: 'Hectáreas',
+        showgrid: true,
+        zeroline: false,
+        tickfont: {
+            size: 14 // Ajustando o tamanho da fonte dos eixos
+        }
+    },
+    yaxis: {
+        title: 'Cuenca',
+        autorange: 'reversed', 
+        tickfont: {
+            size: 14 // Ajustando o tamanho da fonte dos eixos
+        }
+    },
+    height: 800,
+    width: 1300,
+    margin: {
+        l: 300, 
+        r: 50,
+        t: 50,
+        b: 50
+    }
+};
+
+
+    Plotly.newPlot('graficobarras_Incendios_Cuencas', data, layout2);
+</script>
+
+
+    <div class="Descripcion_Incendios_Resguardos">
+        <p>En el espacio que ocupa la Línea Negra en la Sierra Nevada, hay 16 Resguardos Indígenas, que pertenecen a los pueblos
+            Kogui, Arhuaco, Wiwa, Kankuamo, Wayuu y Chimila. El <strong>Resguardo Kogui Malayo Arhuaco</strong>, al ser el mas grande,
+            registró entre 2001 y 2023 el mayor numero de incendios con un total de <strong>1,564.915 hectáreas</strong>. En segundo lugar, 
+        el <strong>Resguardo Arhuaco de la Sierra</strong> tuvo <strong>865.796 hectáreas</strong> de coberturas de bosque perdidas por incendios, y en
+    tercer lugar, el <strong>Resguardo Kankuamo</strong> con <strong>39.083 hectáreas</strong></p>
+    </div>
+
+
+    <!-- /////////// GRAFICO INCENDIOS EN RESGUARDOS -->
+
+    <div id="graficobarras_Incendios_Resguardos" style="width: 900px; height: 600px;"></div>
+
+    <script>
+        var data = [{
+            type: 'bar',
+            x: ['Resguardo Kogui Malayo y Arhuaco', 'Resguardo Arhuaco de la Sierra', 'Resguardo Kankuamo'],
+            y: [1564.915, 865.796, 39.083],
+            orientation: 'v', // Gráfico de barras vertical
+            marker: {
+                color: '#962300',
+                width: 9
+            }
+        }];
+    
+        var layout5 = {
+            title: 'Hectáreas de bosque perdidas por incendios entre 2001 a 2023 en los Resguardos Indígenas',
+            xaxis: {
+                title: 'Resguardos',
+                showgrid: true,
+                zeroline: false,
+                tickfont: {
+                    size: 12 // Ajuste do tamanho da fonte para o eixo X
+                }
+            },
+            yaxis: {
+                title: 'Hectáreas',
+                showgrid: true,
+                zeroline: false
+            },
+            height: 500,
+            width: 900,
+            margin: {
+                l: 50, // Ajuste da margem esquerda
+                r: 50,
+                t: 50,
+                b: 100 // Mais espaço para os rótulos do eixo X
+            },
+            bargap: 0.5 // Aumentar o espaço entre as barras para torná-las mais finas
+        };
+    
+        Plotly.newPlot('graficobarras_Incendios_Resguardos', data, layout5);
+    </script>
+    
+
+
+<!-- /////////// GRAFICO INCENDIOS DENTRO DEL RESGUARDO 2001 A 2023 -->
+
+
+    <div id="grafico_Incendios_Resguardo_2001_2023"></div>
+    
+    <script>
+        
+        var year = [2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023];
+        var rioFrio = [27.235,20.488,116.279,30.121,30.34,42.333,63.866,35.043,25.665,37.525,17.366,36.408,9.66,44.208,68.828,306.04,270.438,45.403,151.304,83.841,37.457,21.649,43.420];
+        
+        var trace1 = {
+            x: year,
+            y: rioFrio,
+            mode: 'lines+markers',
+            name: 'Río Frío',
+            line: {color: '#962300'},
+            marker: {size: 10}
+        
+        };
+
+        var layout1 = {
+            title: {
+                text: 'Hectáreas de bosque perdidas por incendios entre 2001 a 2023 dentro del Resguardo Kogui Malayo Arhuaco',
+                font: {
+                    size: 16,
+                    weight: 'bold',  // Negrita
+                    
+                }
+            },
+            xaxis: {
+            title: 'Año',
+            tickvals: year,  // Asegura que todos los años se muestren en el eje X
+            
+        },
+        yaxis: {
+            title: 'Hectáreas'
+        },
+        hovermode: 'closest'
+        };
+
+        var data1 = [trace1];
+
+        Plotly.newPlot('grafico_Incendios_Resguardo_2001_2023', data1, layout1);
+
+    </script>
+
+
+    <div class="Descripcion_Incendios_Parques">
+    <p>En el área de la Línea Negra también se encuentran 5 Parques Naturales importantes cuyas coberturas arbóreas se vieron
+        reduzidas por las incendios entre 2001 y 2023. Para comenzar, el Parque Sierra Nevada fue el más afectado con 
+        <strong>1,487.234 hectáreas</strong>, seguido por el <strong>Santuario de Flora y Fauna Ciénaga Grande</strong> con 
+        <strong>360 hectáreas</strong>, y por el <strong>Parque Tayrona</strong>, con 
+        <strong>53.210 hectáreas</strong>.</p>
+    </div>
+
+
+    <!-- /////////// Gráfico Parques -->
+    <!--///////////////////////////////// -->
+
+    <div id="graficobarras_Incendios_Parques" style="width: 900px; height: 600px;"></div>
+
+<script>
+    var data = [{
+        type: 'bar',
+        x: ['Sierra Nevada de Santa Marta', 'SFF Ciénaga Grande', 'Tayrona', 'Isla de Salamanca'],
+        y: [1487.234, 360.670, 53.210, 46.949],
+        orientation: 'v', // Gráfico de barras vertical
+        marker: {
+            color: '#005b05',
+            width: 1
+        }
+    }];
+
+    var layout = {
+        title: 'Hectáreas de bosque perdidas por incendios entre 2001 a 2023 en las áreas de Parques Nacionales',
+        xaxis: {
+            title: 'Parque',
+            showgrid: true,
+            zeroline: false,
+            tickfont: {
+                size: 12 // Ajuste del tamaño de la fuente para el eje X
+            }
+        },
+        yaxis: {
+            title: 'Hectáreas',
+            showgrid: true,
+            zeroline: false
+        },
+        height: 500,
+        width: 900,
+        margin: {
+            l: 50, // Ajuste del margen izquierdo
+            r: 50,
+            t: 50,
+            b: 100 // Más espacio para las etiquetas del eje X
+        },
+        bargap: 0.5 // Aumentar el espacio entre las barras para hacerlas más delgadas
+    };
+
+    Plotly.newPlot('graficobarras_Incendios_Parques', data, layout);
+</script>
+
+
+<!-- /////////// GRAFICO INCENDIOS DENTRO DEL PARQUE 2001 A 2023 -->
+
+
+<div id="grafico_Incendios_ParqueSNSM_2001_2023"></div>
+    
+<script>
+    
+    var year = [2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023];
+    var rioFrio = [22.848, 15.132, 223.497, 26.126, 25.992, 36.722, 57.037, 28.287, 20.575, 34.975, 13.766, 34.34, 12.798, 37.917, 37.198, 284.143, 260.63, 33.006, 137.645, 63.695, 29.501, 13.568, 37.836];
+
+    
+    var trace2 = {
+        x: year,
+        y: rioFrio,
+        mode: 'lines+markers',
+        name: 'Río Frío',
+        line: {color: '#005b05'},
+        marker: {size: 10}
+    
+    };
+
+    var layout2 = {
+        title: {
+            text: 'Hectáreas de bosque perdidas por incendios entre 2001 a 2023 dentro del Parque Sierra Nevada de Santa Marta',
+            font: {
+                size: 16,
+                weight: 'bold',  // Negrita
+                
+            }
+        },
+        xaxis: {
+        title: 'Año',
+        tickvals: year,  // Asegura que todos los años se muestren en el eje X
+        
+    },
+    yaxis: {
+        title: 'Hectáreas'
+    },
+    hovermode: 'closest'
+    };
+
+    var data2 = [trace2];
+
+    Plotly.newPlot('grafico_Incendios_ParqueSNSM_2001_2023', data2, layout2);
+
+</script>
+
+</body>
+</html>

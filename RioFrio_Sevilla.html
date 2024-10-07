@@ -1,0 +1,1549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Incendios Rio Frio y Sevilla</title>
+
+    <!-- Leaflet css -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        #map {
+            width: 100%;
+            height: 100vh;
+        }
+        .titulomapaRioFrioSevilla{
+        margin: 0; /* Elimina el margen externo */
+        padding: 5px; /* Ajusta el relleno interno si es necesario */
+        font-size: 12px; /* Ajusta el tamaño de fuente si es necesario */
+        line-height: 0.2; /* Controla la altura de la línea */
+        text-align: center;
+        background-color: rgb(251, 245, 236);
+
+        }
+    </style>
+</head>
+<body>
+    <div class="titulomapaRioFrioSevilla">
+        <h1>Pérdida de cobertura arbórea por causa de Incendios en las cuencas de Río Frío y Sevilla 2001 - 2023</h1>
+    </div>
+    <div id="map"></div>
+
+   
+
+
+    <!-- Leaflet js -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <!-- GeoJSON data script -->
+    <script src="./Data/LineaNegraDecreto1500.js"></script>
+    <script src="./Data/SitiosSagradosLineaNegra1500.js"></script>
+    <script src="./Data_FrioSevilla/RioFrio_Sevilla.js"></script>
+    <script src="./Data_FrioSevilla/Hidrografia_RioFrioSevilla.js"></script>
+    <script src="./Data/ResguardosIndigenas.js"></script>
+    <script src="./Data_FrioSevilla/2023_FrioSevilla_IncendiosBosques.js"></script>
+    <script src="./Data_FrioSevilla/2022_FrioSevilla_IncendiosBosques.js"></script>
+    <script src="./Data_FrioSevilla/2021_FrioSevilla_IncendiosBosques.js"></script>
+    <script src="./Data_FrioSevilla/2020_FrioSevilla_IncendiosBosques.js"></script>
+    <script src="./Data_FrioSevilla/2019_FrioSevilla_IncendiosBosques.js"></script>
+    <script src="./Data_FrioSevilla/2018_FrioSevilla_IncendiosBosques.js"></script>
+    <script src="./Data_FrioSevilla/2017_FrioSevilla_IncendiosBosques.js"></script>
+    <script src="./Data_FrioSevilla/2016_FrioSevilla_IncendiosBosques.js"></script>
+    <script src="./Data_FrioSevilla/2015_FrioSevilla_IncendiosBosques.js"></script>
+    <script src="./Data_FrioSevilla/2014_FrioSevilla_IncendiosBosques.js"></script>
+    <script src="./Data_FrioSevilla/2013_FrioSevilla_IncendiosBosques.js"></script>
+    <script src="./Data_FrioSevilla/2012_FrioSevilla_IncendiosBosques.js"></script>
+    <script src="./Data_FrioSevilla/2011_FrioSevilla_IncendiosBosques.js"></script>
+    <script src="./Data_FrioSevilla/2010_FrioSevilla_IncendiosBosques.js"></script>
+    <script src="./Data_FrioSevilla/2009_FrioSevilla_IncendiosBosques.js"></script>
+    <script src="./Data_FrioSevilla/2008_FrioSevilla_IncendiosBosques.js"></script>
+    <script src="./Data_FrioSevilla/2007_FrioSevilla_IncendiosBosques.js"></script>
+    <script src="./Data_FrioSevilla/2006_FrioSevilla_IncendiosBosques.js"></script>
+    <script src="./Data_FrioSevilla/2005_FrioSevilla_IncendiosBosques.js"></script>
+    <script src="./Data_FrioSevilla/2004_FrioSevilla_IncendiosBosques.js"></script>
+    <script src="./Data_FrioSevilla/2003_FrioSevilla_IncendiosBosques.js"></script>
+    <script src="./Data_FrioSevilla/2002_FrioSevilla_IncendiosBosques.js"></script>
+    <script src="./Data_FrioSevilla/2001_FrioSevilla_IncendiosBosques.js"></script>
+    <script src="./Data_FrioSevilla/Todoslosyear.js"></script>
+    <script src="./Data_FrioSevilla/CuencaRioFrioSevilla.js"></script>
+    <script src="./Data_FrioSevilla/ResguardoFrioSevilla.js"></script>
+    <script src="./Data/Cienaga.js"></script>
+    <script src="./Data_FrioSevilla/Varela.js"></script>
+    <script src="./Data_FrioSevilla/SanPedrodelaSierra.js"></script>
+    <script src="./Data_FrioSevilla/SanJavier.js"></script>
+    <script src="./Data_FrioSevilla/Candelaria.js"></script>
+    <script src="./Data_FrioSevilla/Tucurinca.js"></script>
+    <script src="./Data_FrioSevilla/Sevilla.js"></script>
+    <script src="./Data_FrioSevilla/Guacamayal.js"></script>
+    <script src="./Data_FrioSevilla/Siberia.js"></script>
+    <script src="./Data_FrioSevilla/Parque_RioFrioSevilla.js"></script>
+    <script src="./Data_FrioSevilla/Veredas.js"></script>
+    <script src="./Data_FrioSevilla/Orihueca.js"></script>
+    <script src="./Data_FrioSevilla/LaGranVia.js"></script>
+    <script src="./Data_FrioSevilla/Palmor.js"></script>
+    <script src="./Data_FrioSevilla/Zawady.js"></script>
+    <script src="./Data_FrioSevilla/RioFrio_pueblo.js"></script>
+    <script src="./Data_FrioSevilla/SantaRosalia.js"></script>
+    <script src="./Data_FrioSevilla/Paramo.js"></script>
+    
+    
+    <!-- Custom script -->
+    <script>
+        // Initialize map
+        var map = L.map('map').setView([10.846131744456194, -74.05740831183685], 11.4);
+
+        // Base map layer
+        var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+        }).addTo(map);
+
+        // Add GeoJSON layer
+
+        // Linea Negra Decreto 1500
+        L.geoJSON(LineaNegra, {
+            style: function(feature) {
+                return {
+                    color: 'black', // Border color
+                    weight: 2.5,          // Border thickness
+                };
+            }
+        }).addTo(map);
+
+        // Sitios Sagrados Decreto 1500
+        // Definir el ícono
+        var SitiosSagrados_ICON = L.icon({
+        iconUrl: '/Simbolos/SitiosSagradosIcon.png',
+        iconSize: [7, 7], // Tamaño del ícono
+        });
+
+        // Crear capa GeoJSON con íconos
+        L.geoJSON(SitiosSagrados1500, {
+        pointToLayer: function (feature, latlng) {
+        // Verifica si el objeto feature tiene coordenadas para el marcador
+        if (feature.geometry && feature.geometry.type === 'Point') {
+            return L.marker(latlng, { icon: SitiosSagrados_ICON });
+        }
+        // Si no es un punto, no se agrega al mapa
+        return null;
+        },
+        onEachFeature: function(feature, layer) {
+        if (feature.properties && feature.properties.Nombre && feature.properties.NumDec && feature.properties.Descripcio) {
+            var popupContent = '<strong>Nombre:</strong> ' + feature.properties.Nombre + '<br><strong>Número Decreto:</strong> ' + feature.properties.NumDec + '<br><strong>Descripción:</strong> ' + feature.properties.Descripcio;
+            layer.bindPopup(popupContent);
+        }}}).addTo(map);
+
+
+        // Cuenca RIO FRIO SEVILLA
+        L.geoJSON(CuencaRioFrioSevilla, {
+        style: function(feature) {
+        return {
+            fillColor: 'white',
+            color: '#f9b950',     // Border color
+            weight: 1.5,          // Border thickness
+            opacity: 0.5,        // Border opacity (should be between 0 and 1)
+            fillOpacity: 0.08,    // Fill opacity
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Nombre) {
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>' + feature.properties.Nombre + '</strong>');
+        }}}).addTo(map);
+
+
+
+        // Rio Frio y Sevilla
+        L.geoJSON(RioFrioSevilla, {
+        style: function(feature) {
+        return {
+            color: 'blue',     // Border color
+            weight: 1.7,          // Border thickness
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.NOMBRE_GEO) {
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>' + feature.properties.NOMBRE_GEO + '</strong>');
+        }
+        }
+        }).addTo(map);
+        
+
+        // Hidrografia Rio Frio y Sevilla
+        L.geoJSON(Hidrografia_riofrio_sevilla, {
+        style: function(feature) {
+        return {
+            color: '#0073E6',     // Border color
+            weight: 1.2,          // Border thickness
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.NOMBRE_GEO) {
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>' + feature.properties.NOMBRE_GEO + '</strong>');
+        }
+        }
+        }).addTo(map);
+
+
+
+        //////////////////////////////////
+        //////////////////////////////////
+        // CENTROS POBLADOS 
+        //////////////////////////////////
+        //////////////////////////////////
+
+       //  Cienaga 
+       var Cienaga = L.geoJSON(Cienaga, {
+    style: function(feature) {
+        return {
+            fillColor: '#CED5DB',
+            color: 'white',       // Color del borde
+            weight: 1.5,          // Grosor del borde
+            opacity: 0.3,         // Opacidad del borde
+            fillOpacity: 0.3      // Opacidad de relleno
+        };
+    },
+    onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.NOM_CPOB) {
+            // Añadir tooltip con el nombre de la entidad
+            layer.bindTooltip(feature.properties.NOM_CPOB, {
+                permanent: true,      // Tooltip siempre visible
+                direction: 'center',  // Centrar el texto sobre la entidad
+                className: 'cienaga-label'  // Clase CSS para estilo personalizado
+            }).openTooltip();  // Abrir el tooltip automáticamente
+        }}}).addTo(map);
+
+    // Añadir estilo CSS para el tooltip
+    var css = `
+    .cienaga-label {
+        font-size: 10px;      /* Tamaño de la letra */
+        color: white;         /* Color de la letra */
+        background: none;     /* Sin fondo para el tooltip */
+        border: none;         /* Sin borde para el tooltip */
+        text-shadow: 1px 1px 2px black; /* Sombra para mejorar la legibilidad */
+    }
+    `;
+    var style = document.createElement('style');
+    style.appendChild(document.createTextNode(css));
+    document.head.appendChild(style);
+
+
+
+
+        //  Varela
+        var Varela = L.geoJSON(Varela, {
+    style: function(feature) {
+        return {
+            fillColor: '#CED5DB',
+            color: 'white',       // Color del borde
+            weight: 1.5,          // Grosor del borde
+            opacity: 0.3,         // Opacidad del borde
+            fillOpacity: 0.3      // Opacidad de relleno
+        };
+    },
+    onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.NOM_CPOB) {
+            // Añadir tooltip con el nombre de la entidad
+            layer.bindTooltip(feature.properties.NOM_CPOB, {
+                permanent: true,      // Tooltip siempre visible
+                direction: 'center',  // Centrar el texto sobre la entidad
+                className: 'Varela-label'  // Clase CSS para estilo personalizado
+            }).openTooltip();  // Abrir el tooltip automáticamente
+        }}}).addTo(map);
+
+    // Añadir estilo CSS para el tooltip
+    var css = `
+    .Varela-label {
+        font-size: 10px;      /* Tamaño de la letra */
+        color: white;         /* Color de la letra */
+        background: none;     /* Sin fondo para el tooltip */
+        border: none;         /* Sin borde para el tooltip */
+        text-shadow: 1px 1px 2px black; /* Sombra para mejorar la legibilidad */
+    }
+    `;
+    var style = document.createElement('style');
+    style.appendChild(document.createTextNode(css));
+    document.head.appendChild(style);
+
+
+
+        //  San Pedro de la Sierra
+        var SanPedrodelaSierra = L.geoJSON(SanPedrodelaSierra, {
+    style: function(feature) {
+        return {
+            fillColor: '#CED5DB',
+            color: 'white',       // Color del borde
+            weight: 1.5,          // Grosor del borde
+            opacity: 0.3,         // Opacidad del borde
+            fillOpacity: 0.3      // Opacidad de relleno
+        };
+    },
+    onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.NOM_CPOB) {
+            // Añadir tooltip con el nombre de la entidad
+            layer.bindTooltip(feature.properties.NOM_CPOB, {
+                permanent: true,      // Tooltip siempre visible
+                direction: 'center',  // Centrar el texto sobre la entidad
+                className: 'SanPedrodelaSierra-label'  // Clase CSS para estilo personalizado
+            }).openTooltip();  // Abrir el tooltip automáticamente
+        }}}).addTo(map);
+
+    // Añadir estilo CSS para el tooltip
+    var css = `
+    .SanPedrodelaSierra-label {
+        font-size: 10px;      /* Tamaño de la letra */
+        color: white;         /* Color de la letra */
+        background: none;     /* Sin fondo para el tooltip */
+        border: none;         /* Sin borde para el tooltip */
+        text-shadow: 1px 1px 2px black; /* Sombra para mejorar la legibilidad */
+    }
+    `;
+    var style = document.createElement('style');
+    style.appendChild(document.createTextNode(css));
+    document.head.appendChild(style);
+        
+
+
+        //  San Javier
+        var SanJavier = L.geoJSON(SanJavier, {
+    style: function(feature) {
+        return {
+            fillColor: '#CED5DB',
+            color: 'white',       // Color del borde
+            weight: 1.5,          // Grosor del borde
+            opacity: 0.3,         // Opacidad del borde
+            fillOpacity: 0.3      // Opacidad de relleno
+        };
+    },
+    onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.NOM_CPOB) {
+            // Añadir tooltip con el nombre de la entidad
+            layer.bindTooltip(feature.properties.NOM_CPOB, {
+                permanent: true,      // Tooltip siempre visible
+                direction: 'center',  // Centrar el texto sobre la entidad
+                className: 'SanJavier-label'  // Clase CSS para estilo personalizado
+            }).openTooltip();  // Abrir el tooltip automáticamente
+        }}}).addTo(map);
+
+    // Añadir estilo CSS para el tooltip
+    var css = `
+    .SanJavier-label {
+        font-size: 10px;      /* Tamaño de la letra */
+        color: white;         /* Color de la letra */
+        background: none;     /* Sin fondo para el tooltip */
+        border: none;         /* Sin borde para el tooltip */
+        text-shadow: 1px 1px 2px black; /* Sombra para mejorar la legibilidad */
+    }
+    `;
+    var style = document.createElement('style');
+    style.appendChild(document.createTextNode(css));
+    document.head.appendChild(style);
+                
+
+
+        //  Candelaria
+        var Candelaria = L.geoJSON(Candelaria, {
+    style: function(feature) {
+        return {
+            fillColor: '#CED5DB',
+            color: 'white',       // Color del borde
+            weight: 1.5,          // Grosor del borde
+            opacity: 0.3,         // Opacidad del borde
+            fillOpacity: 0.3      // Opacidad de relleno
+        };
+    },
+    onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.NOM_CPOB) {
+            // Añadir tooltip con el nombre de la entidad
+            layer.bindTooltip(feature.properties.NOM_CPOB, {
+                permanent: true,      // Tooltip siempre visible
+                direction: 'center',  // Centrar el texto sobre la entidad
+                className: 'Candelaria-label'  // Clase CSS para estilo personalizado
+            }).openTooltip();  // Abrir el tooltip automáticamente
+        }}}).addTo(map);
+
+    // Añadir estilo CSS para el tooltip
+    var css = `
+    .Candelaria-label {
+        font-size: 10px;      /* Tamaño de la letra */
+        color: white;         /* Color de la letra */
+        background: none;     /* Sin fondo para el tooltip */
+        border: none;         /* Sin borde para el tooltip */
+        text-shadow: 1px 1px 2px black; /* Sombra para mejorar la legibilidad */
+    }
+    `;
+    var style = document.createElement('style');
+    style.appendChild(document.createTextNode(css));
+    document.head.appendChild(style);
+                
+                        
+
+
+        //  Sevilla Pueblo
+        var SevillaPueblo = L.geoJSON(SevillaPueblo, {
+    style: function(feature) {
+        return {
+            fillColor: '#CED5DB',
+            color: 'white',       // Color del borde
+            weight: 1.5,          // Grosor del borde
+            opacity: 0.3,         // Opacidad del borde
+            fillOpacity: 0.3      // Opacidad de relleno
+        };
+    },
+    onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.NOM_CPOB) {
+            // Añadir tooltip con el nombre de la entidad
+            layer.bindTooltip(feature.properties.NOM_CPOB, {
+                permanent: true,      // Tooltip siempre visible
+                direction: 'center',  // Centrar el texto sobre la entidad
+                className: 'SevillaPueblo-label'  // Clase CSS para estilo personalizado
+            }).openTooltip();  // Abrir el tooltip automáticamente
+        }}}).addTo(map);
+
+    // Añadir estilo CSS para el tooltip
+    var css = `
+    .SevillaPueblo-label {
+        font-size: 10px;      /* Tamaño de la letra */
+        color: white;         /* Color de la letra */
+        background: none;     /* Sin fondo para el tooltip */
+        border: none;         /* Sin borde para el tooltip */
+        text-shadow: 1px 1px 2px black; /* Sombra para mejorar la legibilidad */
+    }
+    `;
+    var style = document.createElement('style');
+    style.appendChild(document.createTextNode(css));
+    document.head.appendChild(style);
+                                
+
+
+        //  Guacamayal
+        var Guacamayal = L.geoJSON(Guacamayal, {
+    style: function(feature) {
+        return {
+            fillColor: '#CED5DB',
+            color: 'white',       // Color del borde
+            weight: 1.5,          // Grosor del borde
+            opacity: 0.3,         // Opacidad del borde
+            fillOpacity: 0.3      // Opacidad de relleno
+        };
+    },
+    onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.NOM_CPOB) {
+            // Añadir tooltip con el nombre de la entidad
+            layer.bindTooltip(feature.properties.NOM_CPOB, {
+                permanent: true,      // Tooltip siempre visible
+                direction: 'center',  // Centrar el texto sobre la entidad
+                className: 'Guacamayal-label'  // Clase CSS para estilo personalizado
+            }).openTooltip();  // Abrir el tooltip automáticamente
+        }}}).addTo(map);
+
+    // Añadir estilo CSS para el tooltip
+    var css = `
+    .Guacamayal-label {
+        font-size: 10px;      /* Tamaño de la letra */
+        color: white;         /* Color de la letra */
+        background: none;     /* Sin fondo para el tooltip */
+        border: none;         /* Sin borde para el tooltip */
+        text-shadow: 1px 1px 2px black; /* Sombra para mejorar la legibilidad */
+    }
+    `;
+    var style = document.createElement('style');
+    style.appendChild(document.createTextNode(css));
+    document.head.appendChild(style);
+
+
+
+        //  Siberia
+        var Siberia = L.geoJSON(Siberia, {
+    style: function(feature) {
+        return {
+            fillColor: '#CED5DB',
+            color: 'white',       // Color del borde
+            weight: 1.5,          // Grosor del borde
+            opacity: 0.3,         // Opacidad del borde
+            fillOpacity: 0.3      // Opacidad de relleno
+        };
+    },
+    onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.NOM_CPOB) {
+            // Añadir tooltip con el nombre de la entidad
+            layer.bindTooltip(feature.properties.NOM_CPOB, {
+                permanent: true,      // Tooltip siempre visible
+                direction: 'center',  // Centrar el texto sobre la entidad
+                className: 'Siberia-label'  // Clase CSS para estilo personalizado
+            }).openTooltip();  // Abrir el tooltip automáticamente
+        }}}).addTo(map);
+
+    // Añadir estilo CSS para el tooltip
+    var css = `
+    .Siberia-label {
+        font-size: 10px;      /* Tamaño de la letra */
+        color: white;         /* Color de la letra */
+        background: none;     /* Sin fondo para el tooltip */
+        border: none;         /* Sin borde para el tooltip */
+        text-shadow: 1px 1px 2px black; /* Sombra para mejorar la legibilidad */
+    }
+    `;
+    var style = document.createElement('style');
+    style.appendChild(document.createTextNode(css));
+    document.head.appendChild(style);
+
+
+
+        //  La Gran Via
+        var LaGranVia = L.geoJSON(LaGranVia, {
+    style: function(feature) {
+        return {
+            fillColor: '#CED5DB',
+            color: 'white',       // Color del borde
+            weight: 1.5,          // Grosor del borde
+            opacity: 0.3,         // Opacidad del borde
+            fillOpacity: 0.3      // Opacidad de relleno
+        };
+    },
+    onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.NOM_CPOB) {
+            // Añadir tooltip con el nombre de la entidad
+            layer.bindTooltip(feature.properties.NOM_CPOB, {
+                permanent: true,      // Tooltip siempre visible
+                direction: 'center',  // Centrar el texto sobre la entidad
+                className: 'LaGranVia-label'  // Clase CSS para estilo personalizado
+            }).openTooltip();  // Abrir el tooltip automáticamente
+        }}}).addTo(map);
+
+    // Añadir estilo CSS para el tooltip
+    var css = `
+    .LaGranVia-label {
+        font-size: 10px;      /* Tamaño de la letra */
+        color: white;         /* Color de la letra */
+        background: none;     /* Sin fondo para el tooltip */
+        border: none;         /* Sin borde para el tooltip */
+        text-shadow: 1px 1px 2px black; /* Sombra para mejorar la legibilidad */
+    }
+    `;
+    var style = document.createElement('style');
+    style.appendChild(document.createTextNode(css));
+    document.head.appendChild(style);
+
+
+
+        //  Orihueca
+        var Orihueca = L.geoJSON(Orihueca, {
+    style: function(feature) {
+        return {
+            fillColor: '#CED5DB',
+            color: 'white',       // Color del borde
+            weight: 1.5,          // Grosor del borde
+            opacity: 0.3,         // Opacidad del borde
+            fillOpacity: 0.3      // Opacidad de relleno
+        };
+    },
+    onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.NOM_CPOB) {
+            // Añadir tooltip con el nombre de la entidad
+            layer.bindTooltip(feature.properties.NOM_CPOB, {
+                permanent: true,      // Tooltip siempre visible
+                direction: 'center',  // Centrar el texto sobre la entidad
+                className: 'Orihueca-label'  // Clase CSS para estilo personalizado
+            }).openTooltip();  // Abrir el tooltip automáticamente
+        }}}).addTo(map);
+
+    // Añadir estilo CSS para el tooltip
+    var css = `
+    .Orihueca-label {
+        font-size: 10px;      /* Tamaño de la letra */
+        color: white;         /* Color de la letra */
+        background: none;     /* Sin fondo para el tooltip */
+        border: none;         /* Sin borde para el tooltip */
+        text-shadow: 1px 1px 2px black; /* Sombra para mejorar la legibilidad */
+    }
+    `;
+    var style = document.createElement('style');
+    style.appendChild(document.createTextNode(css));
+    document.head.appendChild(style);
+
+
+
+            //  Palmor
+            var Palmorpueblo = L.geoJSON(Palmorpueblo, {
+    style: function(feature) {
+        return {
+            fillColor: '#CED5DB',
+            color: 'white',       // Color del borde
+            weight: 1.5,          // Grosor del borde
+            opacity: 0.3,         // Opacidad del borde
+            fillOpacity: 0.3      // Opacidad de relleno
+        };
+    },
+    onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.NOM_CPOB) {
+            // Añadir tooltip con el nombre de la entidad
+            layer.bindTooltip(feature.properties.NOM_CPOB, {
+                permanent: true,      // Tooltip siempre visible
+                direction: 'center',  // Centrar el texto sobre la entidad
+                className: 'Palmorpueblo-label'  // Clase CSS para estilo personalizado
+            }).openTooltip();  // Abrir el tooltip automáticamente
+        }}}).addTo(map);
+
+    // Añadir estilo CSS para el tooltip
+    var css = `
+    .Palmorpueblo-label {
+        font-size: 10px;      /* Tamaño de la letra */
+        color: white;         /* Color de la letra */
+        background: none;     /* Sin fondo para el tooltip */
+        border: none;         /* Sin borde para el tooltip */
+        text-shadow: 1px 1px 2px black; /* Sombra para mejorar la legibilidad */
+    }
+    `;
+    var style = document.createElement('style');
+    style.appendChild(document.createTextNode(css));
+    document.head.appendChild(style);
+
+
+
+            //  Zawady
+            var Zawady = L.geoJSON(Zawady, {
+    style: function(feature) {
+        return {
+            fillColor: '#CED5DB',
+            color: 'white',       // Color del borde
+            weight: 1.5,          // Grosor del borde
+            opacity: 0.3,         // Opacidad del borde
+            fillOpacity: 0.3      // Opacidad de relleno
+        };
+    },
+    onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.NOM_CPOB) {
+            // Añadir tooltip con el nombre de la entidad
+            layer.bindTooltip(feature.properties.NOM_CPOB, {
+                permanent: true,      // Tooltip siempre visible
+                direction: 'center',  // Centrar el texto sobre la entidad
+                className: 'Zawady-label'  // Clase CSS para estilo personalizado
+            }).openTooltip();  // Abrir el tooltip automáticamente
+        }}}).addTo(map);
+
+    // Añadir estilo CSS para el tooltip
+    var css = `
+    .Zawady-label {
+        font-size: 10px;      /* Tamaño de la letra */
+        color: white;         /* Color de la letra */
+        background: none;     /* Sin fondo para el tooltip */
+        border: none;         /* Sin borde para el tooltip */
+        text-shadow: 1px 1px 2px black; /* Sombra para mejorar la legibilidad */
+    }
+    `;
+    var style = document.createElement('style');
+    style.appendChild(document.createTextNode(css));
+    document.head.appendChild(style);
+
+
+
+
+            //  Rio Frio
+            var RioFrio_pueblo = L.geoJSON(RioFrio_pueblo, {
+    style: function(feature) {
+        return {
+            fillColor: '#CED5DB',
+            color: 'white',       // Color del borde
+            weight: 1.5,          // Grosor del borde
+            opacity: 0.3,         // Opacidad del borde
+            fillOpacity: 0.3      // Opacidad de relleno
+        };
+    },
+    onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.NOM_CPOB) {
+            // Añadir tooltip con el nombre de la entidad
+            layer.bindTooltip(feature.properties.NOM_CPOB, {
+                permanent: true,      // Tooltip siempre visible
+                direction: 'center',  // Centrar el texto sobre la entidad
+                className: 'RioFrio_pueblo-label'  // Clase CSS para estilo personalizado
+            }).openTooltip();  // Abrir el tooltip automáticamente
+        }}}).addTo(map);
+
+    // Añadir estilo CSS para el tooltip
+    var css = `
+    .RioFrio_pueblo-label {
+        font-size: 10px;      /* Tamaño de la letra */
+        color: white;         /* Color de la letra */
+        background: none;     /* Sin fondo para el tooltip */
+        border: none;         /* Sin borde para el tooltip */
+        text-shadow: 1px 1px 2px black; /* Sombra para mejorar la legibilidad */
+    }
+    `;
+    var style = document.createElement('style');
+    style.appendChild(document.createTextNode(css));
+    document.head.appendChild(style);
+
+
+
+            //  Santa Rosalia
+            var SantaRosalia = L.geoJSON(SantaRosalia, {
+    style: function(feature) {
+        return {
+            fillColor: '#CED5DB',
+            color: 'white',       // Color del borde
+            weight: 1.5,          // Grosor del borde
+            opacity: 0.3,         // Opacidad del borde
+            fillOpacity: 0.3      // Opacidad de relleno
+        };
+    },
+    onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.NOM_CPOB) {
+            // Añadir tooltip con el nombre de la entidad
+            layer.bindTooltip(feature.properties.NOM_CPOB, {
+                permanent: true,      // Tooltip siempre visible
+                direction: 'center',  // Centrar el texto sobre la entidad
+                className: 'SantaRosalia-label'  // Clase CSS para estilo personalizado
+            }).openTooltip();  // Abrir el tooltip automáticamente
+        }}}).addTo(map);
+
+    // Añadir estilo CSS para el tooltip
+    var css = `
+    .SantaRosalia-label {
+        font-size: 10px;      /* Tamaño de la letra */
+        color: white;         /* Color de la letra */
+        background: none;     /* Sin fondo para el tooltip */
+        border: none;         /* Sin borde para el tooltip */
+        text-shadow: 1px 1px 2px black; /* Sombra para mejorar la legibilidad */
+    }
+    `;
+    var style = document.createElement('style');
+    style.appendChild(document.createTextNode(css));
+    document.head.appendChild(style);
+
+
+
+        //////////////////////////////////
+        //////////////////////////////////
+        // LEYENDA 
+        //////////////////////////////////
+        //////////////////////////////////
+
+
+        // Resguardo  //////////////////////////////////
+        var ResguardoFrioSevilla = L.geoJSON(ResguardoFrioSevilla, {
+        style: function(feature) {
+        return {
+            fillColor: '#AB274F',
+            color: '#AB274F',     // Border color
+            weight: 1.5,          // Border thickness
+            opacity: 0.5,        // Border opacity (should be between 0 and 1)
+            fillOpacity: 0.3,    // Fill opacity
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.NOMBRE) {
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>' + feature.properties.NOMBRE + '</strong>');
+        }}});
+
+
+       //  Parques Nacionales 
+       var ParqueRioFrioSevilla = L.geoJSON(ParqueRioFrioSevilla, {
+        style: function(feature) {
+        return {
+            fillColor: '#00CC00',
+            color: '#00CC00',     // Border color
+            weight: 1.5,          // Border thickness
+            opacity: 0.5,        // Border opacity (should be between 0 and 1)
+            fillOpacity: 0.2,    // Fill opacity
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Nombre) {
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>' + feature.properties.Nombre + '</strong>');
+        }}});
+
+
+
+               //  Paramo
+       var Paramo = L.geoJSON(Paramo, {
+        style: function(feature) {
+        return {
+            fillColor: '#EFDECD',
+            color: '#EFDECD',     // Border color
+            weight: 1.5,          // Border thickness
+            opacity: 0.5,        // Border opacity (should be between 0 and 1)
+            fillOpacity: 0.3,    // Fill opacity
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Nombre) {
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>' + feature.properties.NOMBRE + '</strong>');
+        }}});
+        
+
+
+       //  Veredas 
+       var Veredas = L.geoJSON(Veredas, {
+    style: function(feature) {
+        return {
+            fillColor: '#FFFF80',
+            color: 'black',       // Color del borde
+            weight: 2,          // Grosor del borde
+            opacity: 0.5,         // Opacidad del borde
+            fillOpacity: 0.2      // Opacidad de relleno
+        };
+    },
+    onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Nom_Vereda) {
+            // Añadir tooltip con el nombre de la entidad
+            layer.bindTooltip(feature.properties.Nom_Vereda, {
+                permanent: true,      // Tooltip siempre visible
+                direction: 'center',  // Centrar el texto sobre la entidad
+                className: 'Veredas-label'  // Clase CSS para estilo personalizado
+            }).openTooltip();  // Abrir el tooltip automáticamente
+        }}});
+
+    // Añadir estilo CSS para el tooltip
+    var css = `
+    .Veredas-label {
+        font-size: 10px;      /* Tamaño de la letra */
+        color: white;         /* Color de la letra */
+        background: none;     /* Sin fondo para el tooltip */
+        border: none;         /* Sin borde para el tooltip */
+        text-shadow: 1px 1px 2px black; /* Sombra para mejorar la legibilidad */
+    }
+    `;
+    var style = document.createElement('style');
+    style.appendChild(document.createTextNode(css));
+    document.head.appendChild(style);
+
+
+        //////////////////////////////////
+        //////////////////////////////////
+        // BOSQUES QUEMADOS POR INCENDIOS 
+        //////////////////////////////////
+        //////////////////////////////////
+        
+        
+        // 2023 //////////////////////////////////
+        var IncendiosBosque_SevillaFrio_2023 = L.geoJSON(IncendiosBosque_SevillaFrio_2023, {
+        style: function(feature) {
+        return {
+            color: 'red',     // Border color
+            weight: 2.5,          // Border thickness
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Year && feature.properties.Hectareas 
+        && feature.properties.name_1 && feature.properties.name_2 && feature.properties.NOMBRE 
+        && feature.properties.Nombre_1 && feature.properties.Nombre_12 && feature.properties.Nom_Vereda) {
+            // Redondear las hectáreas a tres decimales
+            var hectareas = feature.properties.Hectareas.toFixed(3);
+            
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>Hectáreas de Bosque perdidas por Incendios:</strong><br>' +
+
+                '<strong>Año:</strong> ' + feature.properties.Year + '<br><strong>Hectareas:</strong> ' + 
+            hectareas + '<br><strong>Departamento:</strong> ' + feature.properties.name_1 + 
+            '<br><strong>Municipio:</strong> ' + feature.properties.name_2 + '<br><strong>Resguardo Indigena:</strong> ' 
+            + feature.properties.NOMBRE + '<br><strong>Parque Nacional Natural:</strong> ' + feature.properties.Nombre_1
+            + '<br><strong>Cuenca:</strong> ' + feature.properties.Nombre_12 + '<br><strong>Nombre Vereda:</strong> ' + feature.properties.Nom_Vereda);
+        }}});
+
+
+        // 2022 //////////////////////////////////
+        var IncendiosBosque_SevillaFrio_2022 = L.geoJSON(IncendiosBosque_SevillaFrio_2022, {
+        style: function(feature) {
+        return {
+            color: 'red',     // Border color
+            weight: 2.5,          // Border thickness
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Year && feature.properties.Hectareas 
+        && feature.properties.name_1 && feature.properties.name_2 && feature.properties.NOMBRE 
+        && feature.properties.Nombre_1 && feature.properties.Nombre_12 && feature.properties.Nom_Vereda) {
+        // Redondear las hectáreas a tres decimales
+        var hectareas = feature.properties.Hectareas.toFixed(3);
+            
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>Hectáreas de Bosque perdidas por Incendios:</strong><br>' +
+
+                '<strong>Año:</strong> ' + feature.properties.Year + '<br><strong>Hectareas:</strong> ' + 
+           hectareas + '<br><strong>Departamento:</strong> ' + feature.properties.name_1 + 
+            '<br><strong>Municipio:</strong> ' + feature.properties.name_2 + '<br><strong>Resguardo Indigena:</strong> ' 
+            + feature.properties.NOMBRE + '<br><strong>Parque Nacional Natural:</strong> ' + feature.properties.Nombre_1
+            + '<br><strong>Cuenca:</strong> ' + feature.properties.Nombre_12 + '<br><strong>Nombre Vereda:</strong> ' + feature.properties.Nom_Vereda);
+        }}});
+
+
+        // 2021 //////////////////////////////////
+        var IncendiosBosque_SevillaFrio_2021 = L.geoJSON(IncendiosBosque_SevillaFrio_2021, {
+        style: function(feature) {
+        return {
+            color: 'red',     // Border color
+            weight: 2.5,          // Border thickness
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Year && feature.properties.Hectareas 
+        && feature.properties.name_1 && feature.properties.name_2 && feature.properties.NOMBRE 
+        && feature.properties.Nombre_1 && feature.properties.Nombre_12 && feature.properties.Nom_Vereda) {
+        // Redondear las hectáreas a tres decimales
+        var hectareas = feature.properties.Hectareas.toFixed(3);
+            
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>Hectáreas de Bosque perdidas por Incendios:</strong><br>' +
+
+                '<strong>Año:</strong> ' + feature.properties.Year + '<br><strong>Hectareas:</strong> ' + 
+            hectareas + '<br><strong>Departamento:</strong> ' + feature.properties.name_1 + 
+            '<br><strong>Municipio:</strong> ' + feature.properties.name_2 + '<br><strong>Resguardo Indigena:</strong> ' 
+            + feature.properties.NOMBRE + '<br><strong>Parque Nacional Natural:</strong> ' + feature.properties.Nombre_1
+            + '<br><strong>Cuenca:</strong> ' + feature.properties.Nombre_12 + '<br><strong>Nombre Vereda:</strong> ' + feature.properties.Nom_Vereda);
+        }}});
+
+
+        // 2020 //////////////////////////////////
+        var IncendiosBosque_SevillaFrio_2020 = L.geoJSON(IncendiosBosque_SevillaFrio_2020, {
+        style: function(feature) {
+        return {
+            color: 'red',     // Border color
+            weight: 2.5,          // Border thickness
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Year && feature.properties.Hectareas 
+        && feature.properties.name_1 && feature.properties.name_2 && feature.properties.NOMBRE 
+        && feature.properties.Nombre_1 && feature.properties.Nombre_12 && feature.properties.Nom_Vereda) {
+        // Redondear las hectáreas a tres decimales
+        var hectareas = feature.properties.Hectareas.toFixed(3);
+            
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>Hectáreas de Bosque perdidas por Incendios:</strong><br>' +
+
+                '<strong>Año:</strong> ' + feature.properties.Year + '<br><strong>Hectareas:</strong> ' + 
+            hectareas + '<br><strong>Departamento:</strong> ' + feature.properties.name_1 + 
+            '<br><strong>Municipio:</strong> ' + feature.properties.name_2 + '<br><strong>Resguardo Indigena:</strong> ' 
+            + feature.properties.NOMBRE + '<br><strong>Parque Nacional Natural:</strong> ' + feature.properties.Nombre_1
+            + '<br><strong>Cuenca:</strong> ' + feature.properties.Nombre_12 + '<br><strong>Nombre Vereda:</strong> ' + feature.properties.Nom_Vereda);
+        }}});
+
+
+        // 2019 //////////////////////////////////
+        var IncendiosBosque_SevillaFrio_2019 = L.geoJSON(IncendiosBosque_SevillaFrio_2019, {
+        style: function(feature) {
+        return {
+            color: 'red',     // Border color
+            weight: 2.5,          // Border thickness
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Year && feature.properties.Hectareas 
+        && feature.properties.name_1 && feature.properties.name_2 && feature.properties.NOMBRE 
+        && feature.properties.Nombre_1 && feature.properties.Nombre_12 && feature.properties.Nom_Vereda) {
+        // Redondear las hectáreas a tres decimales
+        var hectareas = feature.properties.Hectareas.toFixed(3);
+            
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>Hectáreas de Bosque perdidas por Incendios:</strong><br>' +
+
+                '<strong>Año:</strong> ' + feature.properties.Year + '<br><strong>Hectareas:</strong> ' + 
+            hectareas + '<br><strong>Departamento:</strong> ' + feature.properties.name_1 + 
+            '<br><strong>Municipio:</strong> ' + feature.properties.name_2 + '<br><strong>Resguardo Indigena:</strong> ' 
+            + feature.properties.NOMBRE + '<br><strong>Parque Nacional Natural:</strong> ' + feature.properties.Nombre_1
+            + '<br><strong>Cuenca:</strong> ' + feature.properties.Nombre_12 + '<br><strong>Nombre Vereda:</strong> ' + feature.properties.Nom_Vereda);
+        }}});
+
+
+
+        // 2018 //////////////////////////////////
+        var IncendiosBosque_SevillaFrio_2018 = L.geoJSON(IncendiosBosque_SevillaFrio_2018, {
+        style: function(feature) {
+        return {
+            color: 'red',     // Border color
+            weight: 2.5,          // Border thickness
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Year && feature.properties.Hectareas 
+        && feature.properties.name_1 && feature.properties.name_2 && feature.properties.NOMBRE 
+        && feature.properties.Nombre_1 && feature.properties.Nombre_12 && feature.properties.Nom_Vereda) {
+        // Redondear las hectáreas a tres decimales
+        var hectareas = feature.properties.Hectareas.toFixed(3);
+
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>Hectáreas de Bosque perdidas por Incendios:</strong><br>' +
+
+                '<strong>Año:</strong> ' + feature.properties.Year + '<br><strong>Hectareas:</strong> ' + 
+            hectareas + '<br><strong>Departamento:</strong> ' + feature.properties.name_1 + 
+            '<br><strong>Municipio:</strong> ' + feature.properties.name_2 + '<br><strong>Resguardo Indigena:</strong> ' 
+            + feature.properties.NOMBRE + '<br><strong>Parque Nacional Natural:</strong> ' + feature.properties.Nombre_1
+            + '<br><strong>Cuenca:</strong> ' + feature.properties.Nombre_12 + '<br><strong>Nombre Vereda:</strong> ' + feature.properties.Nom_Vereda);
+        }}});
+
+
+
+        // 2017 //////////////////////////////////
+        var IncendiosBosque_SevillaFrio_2017 = L.geoJSON(IncendiosBosque_SevillaFrio_2017, {
+        style: function(feature) {
+        return {
+            color: 'red',     // Border color
+            weight: 2.5,          // Border thickness
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Year && feature.properties.Hectareas 
+        && feature.properties.name_1 && feature.properties.name_2 && feature.properties.NOMBRE 
+        && feature.properties.Nombre_1 && feature.properties.Nombre_12 && feature.properties.Nom_Vereda) {
+        // Redondear las hectáreas a tres decimales
+        var hectareas = feature.properties.Hectareas.toFixed(3);
+            
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>Hectáreas de Bosque perdidas por Incendios:</strong><br>' +
+
+                '<strong>Año:</strong> ' + feature.properties.Year + '<br><strong>Hectareas:</strong> ' + 
+            hectareas + '<br><strong>Departamento:</strong> ' + feature.properties.name_1 + 
+            '<br><strong>Municipio:</strong> ' + feature.properties.name_2 + '<br><strong>Resguardo Indigena:</strong> ' 
+            + feature.properties.NOMBRE + '<br><strong>Parque Nacional Natural:</strong> ' + feature.properties.Nombre_1
+            + '<br><strong>Cuenca:</strong> ' + feature.properties.Nombre_12 + '<br><strong>Nombre Vereda:</strong> ' + feature.properties.Nom_Vereda);
+        }}});
+
+
+
+        // 2016 //////////////////////////////////
+        var IncendiosBosque_SevillaFrio_2016 = L.geoJSON(IncendiosBosque_SevillaFrio_2016, {
+        style: function(feature) {
+        return {
+            color: 'red',     // Border color
+            weight: 2.5,          // Border thickness
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Year && feature.properties.Hectareas 
+        && feature.properties.name_1 && feature.properties.name_2 && feature.properties.NOMBRE 
+        && feature.properties.Nombre_1 && feature.properties.Nombre_12 && feature.properties.Nom_Vereda) {
+        // Redondear las hectáreas a tres decimales
+        var hectareas = feature.properties.Hectareas.toFixed(3);
+            
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>Hectáreas de Bosque perdidas por Incendios:</strong><br>' +
+
+                '<strong>Año:</strong> ' + feature.properties.Year + '<br><strong>Hectareas:</strong> ' + 
+            hectareas + '<br><strong>Departamento:</strong> ' + feature.properties.name_1 + 
+            '<br><strong>Municipio:</strong> ' + feature.properties.name_2 + '<br><strong>Resguardo Indigena:</strong> ' 
+            + feature.properties.NOMBRE + '<br><strong>Parque Nacional Natural:</strong> ' + feature.properties.Nombre_1
+            + '<br><strong>Cuenca:</strong> ' + feature.properties.Nombre_12 + '<br><strong>Nombre Vereda:</strong> ' + feature.properties.Nom_Vereda);
+        }}});
+
+
+
+        // 2015 //////////////////////////////////
+        var IncendiosBosque_SevillaFrio_2015 = L.geoJSON(IncendiosBosque_SevillaFrio_2015, {
+        style: function(feature) {
+        return {
+            color: 'red',     // Border color
+            weight: 2.5,          // Border thickness
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Year && feature.properties.Hectareas 
+        && feature.properties.name_1 && feature.properties.name_2 && feature.properties.NOMBRE 
+        && feature.properties.Nombre_1 && feature.properties.Nombre_12 && feature.properties.Nom_Vereda) {
+        // Redondear las hectáreas a tres decimales
+        var hectareas = feature.properties.Hectareas.toFixed(3);
+            
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>Hectáreas de Bosque perdidas por Incendios:</strong><br>' +
+
+                '<strong>Año:</strong> ' + feature.properties.Year + '<br><strong>Hectareas:</strong> ' + 
+            hectareas + '<br><strong>Departamento:</strong> ' + feature.properties.name_1 + 
+            '<br><strong>Municipio:</strong> ' + feature.properties.name_2 + '<br><strong>Resguardo Indigena:</strong> ' 
+            + feature.properties.NOMBRE + '<br><strong>Parque Nacional Natural:</strong> ' + feature.properties.Nombre_1
+            + '<br><strong>Cuenca:</strong> ' + feature.properties.Nombre_12 + '<br><strong>Nombre Vereda:</strong> ' + feature.properties.Nom_Vereda);
+        }}});
+
+
+
+        // 2014 //////////////////////////////////
+        var IncendiosBosque_SevillaFrio_2014 = L.geoJSON(IncendiosBosque_SevillaFrio_2014, {
+        style: function(feature) {
+        return {
+            color: 'red',     // Border color
+            weight: 2.5,          // Border thickness
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Year && feature.properties.Hectareas 
+        && feature.properties.name_1 && feature.properties.name_2 && feature.properties.NOMBRE 
+        && feature.properties.Nombre_1 && feature.properties.Nombre_12 && feature.properties.Nom_Vereda) {
+        // Redondear las hectáreas a tres decimales
+        var hectareas = feature.properties.Hectareas.toFixed(3);
+            
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>Hectáreas de Bosque perdidas por Incendios:</strong><br>' +
+
+                '<strong>Año:</strong> ' + feature.properties.Year + '<br><strong>Hectareas:</strong> ' + 
+            hectareas + '<br><strong>Departamento:</strong> ' + feature.properties.name_1 + 
+            '<br><strong>Municipio:</strong> ' + feature.properties.name_2 + '<br><strong>Resguardo Indigena:</strong> ' 
+            + feature.properties.NOMBRE + '<br><strong>Parque Nacional Natural:</strong> ' + feature.properties.Nombre_1
+            + '<br><strong>Cuenca:</strong> ' + feature.properties.Nombre_12 + '<br><strong>Nombre Vereda:</strong> ' + feature.properties.Nom_Vereda);
+        }}});
+
+
+        // 2013 //////////////////////////////////
+        var IncendiosBosque_SevillaFrio_2013 = L.geoJSON(IncendiosBosque_SevillaFrio_2013, {
+        style: function(feature) {
+        return {
+            color: 'red',     // Border color
+            weight: 2.5,          // Border thickness
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Year && feature.properties.Hectareas 
+        && feature.properties.name_1 && feature.properties.name_2 && feature.properties.NOMBRE 
+        && feature.properties.Nombre_1 && feature.properties.Nombre_12 && feature.properties.Nom_Vereda) {
+        // Redondear las hectáreas a tres decimales
+        var hectareas = feature.properties.Hectareas.toFixed(3);
+
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>Hectáreas de Bosque perdidas por Incendios:</strong><br>' +
+
+                '<strong>Año:</strong> ' + feature.properties.Year + '<br><strong>Hectareas:</strong> ' + 
+            hectareas + '<br><strong>Departamento:</strong> ' + feature.properties.name_1 + 
+            '<br><strong>Municipio:</strong> ' + feature.properties.name_2 + '<br><strong>Resguardo Indigena:</strong> ' 
+            + feature.properties.NOMBRE + '<br><strong>Parque Nacional Natural:</strong> ' + feature.properties.Nombre_1
+            + '<br><strong>Cuenca:</strong> ' + feature.properties.Nombre_12 + '<br><strong>Nombre Vereda:</strong> ' + feature.properties.Nom_Vereda);
+        }}});
+
+
+
+        // 2012 //////////////////////////////////
+        var IncendiosBosque_SevillaFrio_2012 = L.geoJSON(IncendiosBosque_SevillaFrio_2012, {
+        style: function(feature) {
+        return {
+            color: 'red',     // Border color
+            weight: 2.5,          // Border thickness
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Year && feature.properties.Hectareas 
+        && feature.properties.name_1 && feature.properties.name_2 && feature.properties.NOMBRE 
+        && feature.properties.Nombre_1 && feature.properties.Nombre_12 && feature.properties.Nom_Vereda) {
+        // Redondear las hectáreas a tres decimales
+        var hectareas = feature.properties.Hectareas.toFixed(3);
+            
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>Hectáreas de Bosque perdidas por Incendios:</strong><br>' +
+
+                '<strong>Año:</strong> ' + feature.properties.Year + '<br><strong>Hectareas:</strong> ' + 
+            hectareas + '<br><strong>Departamento:</strong> ' + feature.properties.name_1 + 
+            '<br><strong>Municipio:</strong> ' + feature.properties.name_2 + '<br><strong>Resguardo Indigena:</strong> ' 
+            + feature.properties.NOMBRE + '<br><strong>Parque Nacional Natural:</strong> ' + feature.properties.Nombre_1
+            + '<br><strong>Cuenca:</strong> ' + feature.properties.Nombre_12 + '<br><strong>Nombre Vereda:</strong> ' + feature.properties.Nom_Vereda);
+        }}});
+
+
+
+        // 2011 //////////////////////////////////
+        var IncendiosBosque_SevillaFrio_2011 = L.geoJSON(IncendiosBosque_SevillaFrio_2011, {
+        style: function(feature) {
+        return {
+            color: 'red',     // Border color
+            weight: 2.5,          // Border thickness
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Year && feature.properties.Hectareas 
+        && feature.properties.name_1 && feature.properties.name_2 && feature.properties.NOMBRE 
+        && feature.properties.Nombre_1 && feature.properties.Nombre_12 && feature.properties.Nom_Vereda) {
+        // Redondear las hectáreas a tres decimales
+        var hectareas = feature.properties.Hectareas.toFixed(3);
+            
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>Hectáreas de Bosque perdidas por Incendios:</strong><br>' +
+
+                '<strong>Año:</strong> ' + feature.properties.Year + '<br><strong>Hectareas:</strong> ' + 
+            hectareas + '<br><strong>Departamento:</strong> ' + feature.properties.name_1 + 
+            '<br><strong>Municipio:</strong> ' + feature.properties.name_2 + '<br><strong>Resguardo Indigena:</strong> ' 
+            + feature.properties.NOMBRE + '<br><strong>Parque Nacional Natural:</strong> ' + feature.properties.Nombre_1
+            + '<br><strong>Cuenca:</strong> ' + feature.properties.Nombre_12 + '<br><strong>Nombre Vereda:</strong> ' + feature.properties.Nom_Vereda);
+        }}});
+
+
+
+        // 2010 //////////////////////////////////
+                var IncendiosBosque_SevillaFrio_2010 = L.geoJSON(IncendiosBosque_SevillaFrio_2010, {
+        style: function(feature) {
+        return {
+            color: 'red',     // Border color
+            weight: 2.5,          // Border thickness
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Year && feature.properties.Hectareas 
+        && feature.properties.name_1 && feature.properties.name_2 && feature.properties.NOMBRE 
+        && feature.properties.Nombre_1 && feature.properties.Nombre_12 && feature.properties.Nom_Vereda) {
+        // Redondear las hectáreas a tres decimales
+        var hectareas = feature.properties.Hectareas.toFixed(3);
+            
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>Hectáreas de Bosque perdidas por Incendios:</strong><br>' +
+
+                '<strong>Año:</strong> ' + feature.properties.Year + '<br><strong>Hectareas:</strong> ' + 
+            hectareas + '<br><strong>Departamento:</strong> ' + feature.properties.name_1 + 
+            '<br><strong>Municipio:</strong> ' + feature.properties.name_2 + '<br><strong>Resguardo Indigena:</strong> ' 
+            + feature.properties.NOMBRE + '<br><strong>Parque Nacional Natural:</strong> ' + feature.properties.Nombre_1
+            + '<br><strong>Cuenca:</strong> ' + feature.properties.Nombre_12 + '<br><strong>Nombre Vereda:</strong> ' + feature.properties.Nom_Vereda);
+        }}});
+
+
+
+        // 2009 //////////////////////////////////
+        var IncendiosBosque_SevillaFrio_2009 = L.geoJSON(IncendiosBosque_SevillaFrio_2009, {
+        style: function(feature) {
+        return {
+            color: 'red',     // Border color
+            weight: 2.5,          // Border thickness
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Year && feature.properties.Hectareas 
+        && feature.properties.name_1 && feature.properties.name_2 && feature.properties.NOMBRE 
+        && feature.properties.Nombre_1 && feature.properties.Nombre_12 && feature.properties.Nom_Vereda) {
+        // Redondear las hectáreas a tres decimales
+        var hectareas = feature.properties.Hectareas.toFixed(3);
+            
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>Hectáreas de Bosque perdidas por Incendios:</strong><br>' +
+
+                '<strong>Año:</strong> ' + feature.properties.Year + '<br><strong>Hectareas:</strong> ' + 
+            hectareas + '<br><strong>Departamento:</strong> ' + feature.properties.name_1 + 
+            '<br><strong>Municipio:</strong> ' + feature.properties.name_2 + '<br><strong>Resguardo Indigena:</strong> ' 
+            + feature.properties.NOMBRE + '<br><strong>Parque Nacional Natural:</strong> ' + feature.properties.Nombre_1
+            + '<br><strong>Cuenca:</strong> ' + feature.properties.Nombre_12 + '<br><strong>Nombre Vereda:</strong> ' + feature.properties.Nom_Vereda);
+        }}});
+
+
+
+        // 2008 //////////////////////////////////
+        var IncendiosBosque_SevillaFrio_2008 = L.geoJSON(IncendiosBosque_SevillaFrio_2008, {
+        style: function(feature) {
+        return {
+            color: 'red',     // Border color
+            weight: 2.5,          // Border thickness
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Year && feature.properties.Hectareas 
+        && feature.properties.name_1 && feature.properties.name_2 && feature.properties.NOMBRE 
+        && feature.properties.Nombre_1 && feature.properties.Nombre_12 && feature.properties.Nom_Vereda) {
+        // Redondear las hectáreas a tres decimales
+        var hectareas = feature.properties.Hectareas.toFixed(3);
+            
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>Hectáreas de Bosque perdidas por Incendios:</strong><br>' +
+
+                '<strong>Año:</strong> ' + feature.properties.Year + '<br><strong>Hectareas:</strong> ' + 
+            hectareas + '<br><strong>Departamento:</strong> ' + feature.properties.name_1 + 
+            '<br><strong>Municipio:</strong> ' + feature.properties.name_2 + '<br><strong>Resguardo Indigena:</strong> ' 
+            + feature.properties.NOMBRE + '<br><strong>Parque Nacional Natural:</strong> ' + feature.properties.Nombre_1
+            + '<br><strong>Cuenca:</strong> ' + feature.properties.Nombre_12 + '<br><strong>Nombre Vereda:</strong> ' + feature.properties.Nom_Vereda);
+        }}});
+
+
+
+        // 2007 //////////////////////////////////
+        var IncendiosBosque_SevillaFrio_2007 = L.geoJSON(IncendiosBosque_SevillaFrio_2007, {
+        style: function(feature) {
+        return {
+            color: 'red',     // Border color
+            weight: 2.5,          // Border thickness
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Year && feature.properties.Hectareas 
+        && feature.properties.name_1 && feature.properties.name_2 && feature.properties.NOMBRE 
+        && feature.properties.Nombre_1 && feature.properties.Nombre_12 && feature.properties.Nom_Vereda) {
+        // Redondear las hectáreas a tres decimales
+        var hectareas = feature.properties.Hectareas.toFixed(3);
+            
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>Hectáreas de Bosque perdidas por Incendios:</strong><br>' +
+
+                '<strong>Año:</strong> ' + feature.properties.Year + '<br><strong>Hectareas:</strong> ' + 
+            hectareas + '<br><strong>Departamento:</strong> ' + feature.properties.name_1 + 
+            '<br><strong>Municipio:</strong> ' + feature.properties.name_2 + '<br><strong>Resguardo Indigena:</strong> ' 
+            + feature.properties.NOMBRE + '<br><strong>Parque Nacional Natural:</strong> ' + feature.properties.Nombre_1
+            + '<br><strong>Cuenca:</strong> ' + feature.properties.Nombre_12 + '<br><strong>Nombre Vereda:</strong> ' + feature.properties.Nom_Vereda);
+        }}});
+
+
+
+        // 2006 //////////////////////////////////
+        var IncendiosBosque_SevillaFrio_2006 = L.geoJSON(IncendiosBosque_SevillaFrio_2006, {
+        style: function(feature) {
+        return {
+            color: 'red',     // Border color
+            weight: 2.5,          // Border thickness
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Year && feature.properties.Hectareas 
+        && feature.properties.name_1 && feature.properties.name_2 && feature.properties.NOMBRE 
+        && feature.properties.Nombre_1 && feature.properties.Nombre_12 && feature.properties.Nom_Vereda) {
+        // Redondear las hectáreas a tres decimales
+        var hectareas = feature.properties.Hectareas.toFixed(3);
+            
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>Hectáreas de Bosque perdidas por Incendios:</strong><br>' +
+
+                '<strong>Año:</strong> ' + feature.properties.Year + '<br><strong>Hectareas:</strong> ' + 
+            hectareas + '<br><strong>Departamento:</strong> ' + feature.properties.name_1 + 
+            '<br><strong>Municipio:</strong> ' + feature.properties.name_2 + '<br><strong>Resguardo Indigena:</strong> ' 
+            + feature.properties.NOMBRE + '<br><strong>Parque Nacional Natural:</strong> ' + feature.properties.Nombre_1
+            + '<br><strong>Cuenca:</strong> ' + feature.properties.Nombre_12 + '<br><strong>Nombre Vereda:</strong> ' + feature.properties.Nom_Vereda);
+        }}});
+
+
+
+        // 2005 //////////////////////////////////
+        var IncendiosBosque_SevillaFrio_2005 = L.geoJSON(IncendiosBosque_SevillaFrio_2005, {
+        style: function(feature) {
+        return {
+            color: 'red',     // Border color
+            weight: 2.5,          // Border thickness
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Year && feature.properties.Hectareas 
+        && feature.properties.name_1 && feature.properties.name_2 && feature.properties.NOMBRE 
+        && feature.properties.Nombre_1 && feature.properties.Nombre_12 && feature.properties.Nom_Vereda) {
+        // Redondear las hectáreas a tres decimales
+        var hectareas = feature.properties.Hectareas.toFixed(3);
+
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>Hectáreas de Bosque perdidas por Incendios:</strong><br>' +
+
+                '<strong>Año:</strong> ' + feature.properties.Year + '<br><strong>Hectareas:</strong> ' + 
+            hectareas + '<br><strong>Departamento:</strong> ' + feature.properties.name_1 + 
+            '<br><strong>Municipio:</strong> ' + feature.properties.name_2 + '<br><strong>Resguardo Indigena:</strong> ' 
+            + feature.properties.NOMBRE + '<br><strong>Parque Nacional Natural:</strong> ' + feature.properties.Nombre_1
+            + '<br><strong>Cuenca:</strong> ' + feature.properties.Nombre_12 + '<br><strong>Nombre Vereda:</strong> ' + feature.properties.Nom_Vereda);
+        }}});
+
+
+
+        // 2004 //////////////////////////////////
+        var IncendiosBosque_SevillaFrio_2004 = L.geoJSON(IncendiosBosque_SevillaFrio_2004, {
+        style: function(feature) {
+        return {
+            color: 'red',     // Border color
+            weight: 2.5,          // Border thickness
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Year && feature.properties.Hectareas 
+        && feature.properties.name_1 && feature.properties.name_2 && feature.properties.NOMBRE 
+        && feature.properties.Nombre_1 && feature.properties.Nombre_12 && feature.properties.Nom_Vereda) {
+        // Redondear las hectáreas a tres decimales
+            var hectareas = feature.properties.Hectareas.toFixed(3);
+
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>Hectáreas de Bosque perdidas por Incendios:</strong><br>' +
+
+                '<strong>Año:</strong> ' + feature.properties.Year + '<br><strong>Hectareas:</strong> ' + 
+            hectareas + '<br><strong>Departamento:</strong> ' + feature.properties.name_1 + 
+            '<br><strong>Municipio:</strong> ' + feature.properties.name_2 + '<br><strong>Resguardo Indigena:</strong> ' 
+            + feature.properties.NOMBRE + '<br><strong>Parque Nacional Natural:</strong> ' + feature.properties.Nombre_1
+            + '<br><strong>Cuenca:</strong> ' + feature.properties.Nombre_12 + '<br><strong>Nombre Vereda:</strong> ' + feature.properties.Nom_Vereda);
+        }}});
+
+
+
+        // 2003 //////////////////////////////////
+        var IncendiosBosque_SevillaFrio_2003 = L.geoJSON(IncendiosBosque_SevillaFrio_2003, {
+        style: function(feature) {
+        return {
+            color: 'red',     // Border color
+            weight: 2.5,          // Border thickness
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Year && feature.properties.Hectareas 
+        && feature.properties.name_1 && feature.properties.name_2 && feature.properties.NOMBRE 
+        && feature.properties.Nombre_1 && feature.properties.Nombre_12 && feature.properties.Nom_Vereda) {
+        // Redondear las hectáreas a tres decimales
+        var hectareas = feature.properties.Hectareas.toFixed(3);
+
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>Hectáreas de Bosque perdidas por Incendios:</strong><br>' +
+
+                '<strong>Año:</strong> ' + feature.properties.Year + '<br><strong>Hectareas:</strong> ' + 
+            hectareas + '<br><strong>Departamento:</strong> ' + feature.properties.name_1 + 
+            '<br><strong>Municipio:</strong> ' + feature.properties.name_2 + '<br><strong>Resguardo Indigena:</strong> ' 
+            + feature.properties.NOMBRE + '<br><strong>Parque Nacional Natural:</strong> ' + feature.properties.Nombre_1
+            + '<br><strong>Cuenca:</strong> ' + feature.properties.Nombre_12 + '<br><strong>Nombre Vereda:</strong> ' + feature.properties.Nom_Vereda);
+        }}});
+
+
+
+        // 2002 //////////////////////////////////
+        var IncendiosBosque_SevillaFrio_2002 = L.geoJSON(IncendiosBosque_SevillaFrio_2002, {
+        style: function(feature) {
+        return {
+            color: 'red',     // Border color
+            weight: 2.5,          // Border thickness
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Year && feature.properties.Hectareas 
+        && feature.properties.name_1 && feature.properties.name_2 && feature.properties.NOMBRE 
+        && feature.properties.Nombre_1 && feature.properties.Nombre_12 && feature.properties.Nom_Vereda) {
+        // Redondear las hectáreas a tres decimales
+        var hectareas = feature.properties.Hectareas.toFixed(3);
+
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>Hectáreas de Bosque perdidas por Incendios:</strong><br>' +
+
+                '<strong>Año:</strong> ' + feature.properties.Year + '<br><strong>Hectareas:</strong> ' + 
+            hectareas + '<br><strong>Departamento:</strong> ' + feature.properties.name_1 + 
+            '<br><strong>Municipio:</strong> ' + feature.properties.name_2 + '<br><strong>Resguardo Indigena:</strong> ' 
+            + feature.properties.NOMBRE + '<br><strong>Parque Nacional Natural:</strong> ' + feature.properties.Nombre_1
+            + '<br><strong>Cuenca:</strong> ' + feature.properties.Nombre_12 + '<br><strong>Nombre Vereda:</strong> ' + feature.properties.Nom_Vereda);
+        }}});
+
+
+
+        // 2001 //////////////////////////////////
+        var IncendiosBosque_SevillaFrio_2001 = L.geoJSON(IncendiosBosque_SevillaFrio_2001, {
+        style: function(feature) {
+        return {
+            color: 'red',     // Border color
+            weight: 2.5,          // Border thickness
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Year && feature.properties.Hectareas 
+        && feature.properties.name_1 && feature.properties.name_2 && feature.properties.NOMBRE 
+        && feature.properties.Nombre_1 && feature.properties.Nombre_12 && feature.properties.Nom_Vereda) {
+        // Redondear las hectáreas a tres decimales
+        var hectareas = feature.properties.Hectareas.toFixed(3);
+
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>Hectáreas de Bosque perdidas por Incendios:</strong><br>' +
+
+                '<strong>Año:</strong> ' + feature.properties.Year + '<br><strong>Hectareas:</strong> ' + 
+            hectareas + '<br><strong>Departamento:</strong> ' + feature.properties.name_1 + 
+            '<br><strong>Municipio:</strong> ' + feature.properties.name_2 + '<br><strong>Resguardo Indigena:</strong> ' 
+            + feature.properties.NOMBRE + '<br><strong>Parque Nacional Natural:</strong> ' + feature.properties.Nombre_1
+            + '<br><strong>Cuenca:</strong> ' + feature.properties.Nombre_12 + '<br><strong>Nombre Vereda:</strong> ' + feature.properties.Nom_Vereda);
+        }}});
+
+
+                // TODOS LOS YEARS  //////////////////////////////////
+                var Todoslosyear = L.geoJSON(Todoslosyear, {
+        style: function(feature) {
+        return {
+            color: 'red',     // Border color
+            weight: 2.5,          // Border thickness
+        };
+        },
+        onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.Year && feature.properties.Hectareas 
+        && feature.properties.name_1 && feature.properties.name_2 && feature.properties.NOMBRE 
+        && feature.properties.Nombre_1 && feature.properties.Nombre_12 && feature.properties.Nom_Vereda) {
+        // Redondear las hectáreas a tres decimales
+        var hectareas = feature.properties.Hectareas.toFixed(3);
+
+            // Use HTML to make the name bold
+            layer.bindPopup('<strong>Hectáreas de Bosque perdidas por Incendios:</strong><br>' +
+
+                '<strong>Año:</strong> ' + feature.properties.Year + '<br><strong>Hectareas:</strong> ' + 
+            hectareas + '<br><strong>Departamento:</strong> ' + feature.properties.name_1 + 
+            '<br><strong>Municipio:</strong> ' + feature.properties.name_2 + '<br><strong>Resguardo Indigena:</strong> ' 
+            + feature.properties.NOMBRE + '<br><strong>Parque Nacional Natural:</strong> ' + feature.properties.Nombre_1
+            + '<br><strong>Cuenca:</strong> ' + feature.properties.Nombre_12 + '<br><strong>Nombre Vereda:</strong> ' + feature.properties.Nom_Vereda);
+        }}});
+
+
+//////////
+////////// Layer Control Incendios 
+//////////
+
+    var overlayMapsIncendiosFrioSevilla = {
+    "2023": IncendiosBosque_SevillaFrio_2023,
+    "2022": IncendiosBosque_SevillaFrio_2022,
+    "2021": IncendiosBosque_SevillaFrio_2021,
+    "2020": IncendiosBosque_SevillaFrio_2020,
+    "2019": IncendiosBosque_SevillaFrio_2019,
+    "2018": IncendiosBosque_SevillaFrio_2018,
+    "2017": IncendiosBosque_SevillaFrio_2017,
+    "2016": IncendiosBosque_SevillaFrio_2016,
+    "2015": IncendiosBosque_SevillaFrio_2015,
+    "2014": IncendiosBosque_SevillaFrio_2014,
+    "2013": IncendiosBosque_SevillaFrio_2013,
+    "2012": IncendiosBosque_SevillaFrio_2012,
+    "2011": IncendiosBosque_SevillaFrio_2011,
+    "2010": IncendiosBosque_SevillaFrio_2010,
+    "2009": IncendiosBosque_SevillaFrio_2009,
+    "2008": IncendiosBosque_SevillaFrio_2008,
+    "2007": IncendiosBosque_SevillaFrio_2007,
+    "2006": IncendiosBosque_SevillaFrio_2006,
+    "2005": IncendiosBosque_SevillaFrio_2005,
+    "2004": IncendiosBosque_SevillaFrio_2004,
+    "2003": IncendiosBosque_SevillaFrio_2003,
+    "2002": IncendiosBosque_SevillaFrio_2002,
+    "2001": IncendiosBosque_SevillaFrio_2001,
+    "2001 - 2023": Todoslosyear,
+    };
+
+    var layerControlIncendiosFrioSevilla = L.control.layers(null, overlayMapsIncendiosFrioSevilla, 
+    { collapsed: false, position: 'topright' }).addTo(map);
+
+    // Seleccionar el contenedor del control de capas
+    var layerControlIncendiosFrioSevilla = layerControlIncendiosFrioSevilla.getContainer();
+
+
+    // Crear el elemento de título para los incendios
+    var titleElementIncendiosFrioSevilla = document.createElement('div');
+    titleElementIncendiosFrioSevilla.innerHTML = "<strong>Año Incendio</strong>";
+    titleElementIncendiosFrioSevilla.style.textAlign = 'center';
+    titleElementIncendiosFrioSevilla.style.padding = '5px';
+    titleElementIncendiosFrioSevilla.style.fontSize = '16px';
+    titleElementIncendiosFrioSevilla.style.backgroundColor = '#ffffff';
+    titleElementIncendiosFrioSevilla.style.marginBottom = '0px';
+    layerControlIncendiosFrioSevilla.style.marginTop = '0px';
+
+    // Insertar el título antes del contenido del control de capas
+    layerControlIncendiosFrioSevilla.parentNode.insertBefore(titleElementIncendiosFrioSevilla, layerControlIncendiosFrioSevilla);
+
+
+
+
+
+
+    // Definir las capas de incendios bosques por año
+    var overlayMapsLeyendafriosevilla = {
+    
+    "Parque Siera Nevada": ParqueRioFrioSevilla, 
+    "Resguardo Kogui Malayo Arhuaco": ResguardoFrioSevilla,
+    "Páramo": Paramo, 
+    "Veredas": Veredas,
+    };
+
+    // Crear el control de capas 
+    var layerControlLeyendafriosevilla = L.control.layers(null, overlayMapsLeyendafriosevilla, { collapsed: false, position: 'topleft' })
+    .addTo(map);
+
+    // Seleccionar el contenedor del control de capas
+    var layerControlContainerLeyendafriosevilla = layerControlLeyendafriosevilla.getContainer();
+
+
+    // Insertar el título antes del contenido del control de capas
+    layerControlContainerLeyendafriosevilla.parentNode.insertBefore(titleElementLeyendafriosevilla, layerControlContainerLeyendafriosevilla);
+
+    </script>
+</body>
+</html>
+
